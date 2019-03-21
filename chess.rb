@@ -1,10 +1,13 @@
 class Move
-  RULES = { # TODO: not strings
-    "Pieces::Null" => ->(_, _, _) {},
-    "Pieces::Pawn" => ->(_start_cell, destination_cell, _piece) {
-      !destination_cell.piece.present?
+  MOVE_RULES = { # TODO: not strings
+    "Pieces::Pawn" => ->(move) {
+      !move.destination_cell.occupied? ||
+        move.pawn_attack?
     }
   }
+
+  attr_reader :start_cell, :destination_cell, :moving_piece
+
   def initialize(start_cell, destination_cell)
     @start_cell, @destination_cell = start_cell, destination_cell
     @moving_piece = start_cell.piece
@@ -19,12 +22,15 @@ class Move
     destination_cell.piece == moving_piece
   end
 
+  def pawn_attack?
+    # Right attach
+    ((destination_cell.x - start_cell.x == 1) && (destination_cell.y - start_cell.y == 1))
+  end
+
   private
 
-  attr_reader :start_cell, :destination_cell, :moving_piece
-
   def can_move?
-    RULES[moving_piece.class.to_s].call(start_cell, destination_cell, moving_piece)
+    MOVE_RULES[moving_piece.class.to_s].call(self)
   end
 
   def do_move
@@ -57,7 +63,7 @@ end
 module Pieces
   class Abstract
     def initialize
-      @id = rand
+      @id = rand # TODO: color
     end
 
     attr_reader :id
@@ -80,6 +86,7 @@ module Pieces
   end
 
   class Pawn < Abstract; end
+  class King < Abstract; end
 
   class Null < Abstract # TODO: singleton
     def inspect
