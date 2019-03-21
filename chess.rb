@@ -5,6 +5,8 @@ module Moves
     end
 
     def call
+      return false unless Board.include?(move.destination_cell)
+
       (!move.destination_cell.occupied? && valid_move_destination?) ||
         (move.destination_cell.occupied? && right_attack?)
       # TODO: left attack
@@ -28,7 +30,7 @@ module Moves
 end
 
 class Move
-  MOVE_RULES = { "Pieces::Pawn" => Moves::Pawn } # TODO: not strings
+  RULES = { "Pieces::Pawn" => Moves::Pawn } # TODO: not strings
 
   attr_reader :start_cell, :destination_cell, :moving_piece
 
@@ -51,7 +53,14 @@ class Move
   private
 
   def can_move?
-    MOVE_RULES[moving_piece.class.to_s].new(self).call
+    RULES[moving_piece.class.to_s].new(self).call
+  end
+end
+
+module Board
+  def self.include?(cell)
+    (1..8).to_a.include?(cell.x) &&
+      (1..8).to_a.include?(cell.y)
   end
 end
 

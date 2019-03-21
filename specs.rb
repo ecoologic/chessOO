@@ -6,10 +6,23 @@ RSpec.describe Move do
   subject(:move) { described_class.new(start_cell, destination_cell) }
 
   let(:start_cell) { Cell.new(1, 1, start_piece) }
+  let(:start_piece) { Pieces::Pawn.new }
 
   describe '#call' do
+    context "a pawn attacking off the board" do
+      let(:destination_cell) { Cell.new(0, 2, destination_piece) }
+      let(:destination_piece) { Pieces::Pawn.new }
+
+      it "can't move" do
+        ok = move.call
+
+        expect(ok).to be_falsey
+        expect(start_cell).to be_occupied
+        expect(start_cell.piece).to eq start_piece
+      end
+    end
+
     context "a pawn attacking right" do
-      let(:start_piece) { Pieces::Pawn.new }
       let(:destination_cell) { Cell.new(2, 2, destination_piece) }
 
       context "when the cell is empty" do
@@ -38,7 +51,6 @@ RSpec.describe Move do
     end
 
     context "a pawn moving one forward" do
-      let(:start_piece) { Pieces::Pawn.new }
       let(:destination_cell) { Cell.new(1, 2, destination_piece) }
 
       context "when the cell is empty" do
