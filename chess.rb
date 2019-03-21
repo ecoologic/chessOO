@@ -1,10 +1,34 @@
+module Moves
+  class Pawn
+    def initialize(move)
+      @move = move
+    end
+
+    def call
+      (!move.destination_cell.occupied? && valid_move_destination?) ||
+        (move.destination_cell.occupied? && right_attack?)
+      # TODO: left attack
+    end
+
+    private
+
+    attr_reader :move
+
+    def valid_move_destination?
+      move.start_cell.x == move.destination_cell.x &&
+        move.destination_cell.x - move.start_cell.x <= 2
+      # TODO: two only for start position
+    end
+
+    def right_attack?
+      ((move.destination_cell.x - move.start_cell.x == 1) &&
+        (move.destination_cell.y - move.start_cell.y == 1))
+    end
+  end
+end
+
 class Move
-  MOVE_RULES = { # TODO: not strings
-    "Pieces::Pawn" => ->(move) {
-      !move.destination_cell.occupied? ||
-        move.pawn_attack?
-    }
-  }
+  MOVE_RULES = { "Pieces::Pawn" => Moves::Pawn } # TODO: not strings
 
   attr_reader :start_cell, :destination_cell, :moving_piece
 
@@ -18,24 +42,16 @@ class Move
   end
 
   def call
-    do_move if can_move?
-    destination_cell.piece == moving_piece
-  end
+    return unless can_move?
 
-  def pawn_attack?
-    # Right attach
-    ((destination_cell.x - start_cell.x == 1) && (destination_cell.y - start_cell.y == 1))
+    start_cell.piece = Pieces::Null.new
+    destination_cell.piece = moving_piece
   end
 
   private
 
   def can_move?
-    MOVE_RULES[moving_piece.class.to_s].call(self)
-  end
-
-  def do_move
-    start_cell.piece = Pieces::Null.new
-    destination_cell.piece = moving_piece
+    MOVE_RULES[moving_piece.class.to_s].new(self).call
   end
 end
 
@@ -94,7 +110,7 @@ module Pieces
     end
 
     def ==(other_piece)
-      other_piece.present?
+      !other_piece.present?
     end
 
     def present?

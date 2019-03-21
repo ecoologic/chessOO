@@ -13,16 +13,24 @@ RSpec.describe Move do
       let(:destination_cell) { Cell.new(2, 2, destination_piece) }
 
       context "when the cell is empty" do
-        it "can't move"
+        let(:destination_piece) { Pieces::Null.new }
+
+        it "can't attack" do
+          ok = move.call
+
+          expect(ok).to be_falsey
+          expect(start_cell).to be_occupied
+          expect(destination_cell.piece).to eq destination_piece
+        end
       end
 
       context "when the cell is occupied" do
         let(:destination_piece) { Pieces::King.new }
 
         it "eats the piece" do
-          success = move.call
+          ok = move.call
 
-          expect(success).to be true
+          expect(ok).to be_truthy
           expect(start_cell).not_to be_occupied
           expect(destination_cell.piece).to eq(start_piece)
         end
@@ -37,9 +45,9 @@ RSpec.describe Move do
         let(:destination_piece) { Pieces::Null.new }
 
         it "can move" do
-          moved = move.call
+          ok = move.call
 
-          expect(moved).to be true
+          expect(ok).to be_truthy
           expect(start_cell).not_to be_occupied
           expect(destination_cell.piece).to eq(start_piece)
         end
@@ -49,9 +57,9 @@ RSpec.describe Move do
         let(:destination_piece) { Pieces::Pawn.new }
 
         it "can't move" do
-          moved = move.call
+          ok = move.call
 
-          expect(moved).to be false
+          expect(ok).to be_falsey
           expect(start_cell.piece).to eq(start_piece)
           expect(destination_cell).to be_occupied
         end
