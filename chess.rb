@@ -1,11 +1,10 @@
-class Chess
-  def initialize
-    start_cell, destination_cell = Cell.new(:a, 1), Cell.new(:a, 2)
-    Move.new(start_cell, destination_cell).call
-  end
-end
-
 class Move
+  RULES = { # TODO: not strings
+    "Pieces::Null" => ->(_, _, _) {},
+    "Pieces::Pawn" => ->(_start_cell, destination_cell, _piece) {
+      !destination_cell.piece.present?
+    }
+  }
   def initialize(start_cell, destination_cell)
     @start_cell, @destination_cell = start_cell, destination_cell
     @moving_piece = start_cell.piece
@@ -25,7 +24,7 @@ class Move
   attr_reader :start_cell, :destination_cell, :moving_piece
 
   def can_move?
-    destination_cell.piece != Pieces::Null.new
+    RULES[moving_piece.class.to_s].call(start_cell, destination_cell, moving_piece)
   end
 
   def do_move
@@ -34,7 +33,7 @@ class Move
   end
 end
 
-class Cell
+class Cell # TODO: Tile?
   def initialize(x, y, piece = Pieces::Null.new)
     @x, @y, @piece = x, y, piece
   end
@@ -49,8 +48,11 @@ class Cell
   def ==(other_cell)
     other_cell.x == x && other_cell.y == y
   end
-end
 
+  def occupied?
+    piece.present?
+  end
+end
 
 module Pieces
   class Abstract
@@ -72,26 +74,24 @@ module Pieces
       other_piece.id == id
     end
 
-    def nil?
-      false
+    def present?
+      true
     end
   end
 
-  class Pawn < Abstract
-  end
+  class Pawn < Abstract; end
 
-  # TODO: singleton
-  class Null < Abstract
+  class Null < Abstract # TODO: singleton
     def inspect
       "#<Pieces::Null>"
     end
 
     def ==(other_piece)
-      other_piece.nil?
+      other_piece.present?
     end
 
-    def nil?
-      true
+    def present?
+      false
     end
   end
 end
