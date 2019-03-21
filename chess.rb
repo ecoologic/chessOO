@@ -11,26 +11,33 @@ class Move
   def initialize(start_cell, destination_cell)
     @start_cell, @destination_cell = start_cell, destination_cell
     @moving_piece = start_cell.piece
-    @rank = start_cell.piece.rank
   end
 
   def to_s
-    "[#{rank}] #{start_cell} -> #{destination_cell}"
+    "[#{type}] #{start_cell} -> #{destination_cell}"
   end
 
   def call
-    start_cell.piece = nil
-    destination_cell.piece = moving_piece
+    do_move if can_move?
     destination_cell.piece == moving_piece
   end
 
   private
 
   attr_reader :start_cell, :destination_cell, :moving_piece
+
+  def can_move?
+    destination_cell.piece != Pieces::Null.new
+  end
+
+  def do_move
+    start_cell.piece = Pieces::Null.new
+    destination_cell.piece = moving_piece
+  end
 end
 
 class Cell
-  def initialize(x, y, piece = nil)
+  def initialize(x, y, piece = Pieces::Null.new)
     @x, @y, @piece = x, y, piece
   end
 
@@ -46,21 +53,48 @@ class Cell
   end
 end
 
-class Piece
-  def initialize(rank)
-    @rank = rank
-    @id = "#{rank}##{rand}" # TODO: singletons
+
+module Pieces
+  class Abstract
+    def initialize
+      @id = rand
+    end
+
+    attr_reader :id
+
+    def to_s
+      inspect
+    end
+
+    def inspect
+      "#<#{self.class}:#{id}>"
+    end
+
+    def ==(other_piece)
+      other_piece.id == id
+    end
+
+    def nil?
+      false
+    end
   end
 
-  attr_reader :id, :rank
-
-  def ==(other_piece)
-    other_piece.id == id
+  class Pawn < Abstract
   end
-end
 
-module Ranks
-  class Pawn
+  # TODO: singleton
+  class Null < Abstract
+    def inspect
+      "#<Pieces::Null>"
+    end
+
+    def ==(other_piece)
+      other_piece.nil?
+    end
+
+    def nil?
+      true
+    end
   end
 end
 
@@ -69,17 +103,17 @@ require 'rspec'
 RSpec.describe Move do
   subject(:move) { described_class.new(start_cell, destination_cell) }
 
+  let(:start_piece) { Pieces::Pawn.new }
   let(:start_cell) { Cell.new(:a, 1, start_piece) }
-  let(:destination_cell) { Cell.new(:a, 2, Piece.new(Ranks::Pawn)) }
-  let(:start_piece) { Piece.new(Ranks::Pawn) }
+  let(:destination_cell) { Cell.new(:a, 2, Pieces::Pawn.new) }
 
   context "a pawn" do
     describe '#call' do
       it "can move one forward" do
-        result = move.call
+        ok = move.call
 
-        expect(result).to be true
-        expect(start_cell.piece).to be nil
+        expect(ok).to be true
+        expect(start_cell.piece).to eq Pieces::Null.new
         expect(destination_cell.piece).to eq(start_piece)
       end
 
