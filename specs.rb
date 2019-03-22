@@ -87,3 +87,54 @@ RSpec.describe Move do
     end
   end
 end
+
+##############################################################################
+
+RSpec.describe Board do
+  subject(:board) { described_class.new }
+
+  describe '.initial_disposition' do
+    let(:disposition) { described_class.initial_disposition }
+    let(:first_cell) { disposition.first.first }
+    let(:last_cell) { disposition.last.last }
+
+    it "sets the cells coordinates" do
+      expect([first_cell.x, first_cell.y]).to eq [0, 0]
+      expect([disposition.first.last.x, disposition.first.last.y]).to eq [7, 0]
+      expect([disposition.last.first.x, disposition.last.first.y]).to eq [0, 7]
+      expect([last_cell.x, last_cell.y]).to eq [7, 7]
+    end
+
+    it "puts pawns on the second and second last row" do
+      expect(disposition[1].map { |c| c.piece.class }.uniq).to eq [Pieces::Pawn]
+      expect(disposition[6].map { |c| c.piece.class }.uniq).to eq [Pieces::Pawn]
+    end
+
+    it "puts nothing on the middle rows" do
+      expect(disposition[2].map { |c| c.piece.class }.uniq).to eq [Pieces::Null]
+      expect(disposition[3].map { |c| c.piece.class }.uniq).to eq [Pieces::Null]
+      expect(disposition[4].map { |c| c.piece.class }.uniq).to eq [Pieces::Null]
+      expect(disposition[5].map { |c| c.piece.class }.uniq).to eq [Pieces::Null]
+    end
+  end
+
+  describe '#move' do
+    let!(:start_piece) { board.cell_at(start_position).piece }
+    let(:start_position) { 'G2' }
+    let(:destination_position) { 'G3' }
+
+    it "raises an error if you try to move an empty piece" do
+      expect { board.move('E5', 'E6') }.to raise_error(ArgumentError)
+    end
+
+    it "moves the piece on the board" do
+      ok = board.move(start_position, destination_position)
+
+      expect(ok).not_to be_nil
+      expect(board.cell_at(start_position)).not_to be_occupied
+      expect(board.cell_at(destination_position).piece).to eq start_piece
+    end
+  end
+
+  describe '#cell_at'
+end
