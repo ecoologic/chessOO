@@ -1,4 +1,4 @@
-# Moves -> [Move, Board, Cell]
+# Moves -> [Move, Board, Tile]
 module Moves
   class Null
     def initialize(_move); end
@@ -11,11 +11,10 @@ module Moves
     end
 
     def call
-      return false unless Board.include?(move.destination_cell)
+      return false unless Board.include?(move.destination_tile)
 
-      (!move.destination_cell.occupied? && valid_move_destination?) ||
-        (move.destination_cell.occupied? && right_attack?)
-      # TODO: left attack
+      (!move.destination_tile.occupied? && valid_move_destination?) ||
+        (move.destination_tile.occupied? && valid_attack?)
     end
 
     private
@@ -23,40 +22,40 @@ module Moves
     attr_reader :move
 
     def valid_move_destination?
-      move.start_cell.x == move.destination_cell.x &&
-        move.destination_cell.x - move.start_cell.x <= 1
+      move.start_tile.x == move.destination_tile.x &&
+        move.destination_tile.x - move.start_tile.x <= 1
     end
 
-    def right_attack?
-      (move.destination_cell.x - move.start_cell.x).abs == 1 &&
-        (move.destination_cell.y - move.start_cell.y).abs == 1
+    def valid_attack?
+      (move.destination_tile.x - move.start_tile.x).abs == 1 &&
+        (move.destination_tile.y - move.start_tile.y).abs == 1
     end
   end
 end
 
-# Move -> [Moves, Cell, Piece]
+# Move -> [Moves, Tile, Pieces]
 class Move
   RULES = {
     "Pieces::Null" => Moves::Null,
     "Pieces::Pawn" => Moves::Pawn
   } # TODO: not strings
 
-  def initialize(start_cell, destination_cell)
-    @start_cell, @destination_cell = start_cell, destination_cell
-    @moving_piece = start_cell.piece
-    raise ArgumentError, "Can't move an empty cell" unless start_cell.occupied?
+  def initialize(start_tile, destination_tile)
+    @start_tile, @destination_tile = start_tile, destination_tile
+    @moving_piece = start_tile.piece
+    raise ArgumentError, "Can't move an empty tile" unless start_tile.occupied?
   end
 
-  attr_reader :start_cell, :destination_cell, :moving_piece
+  attr_reader :start_tile, :destination_tile, :moving_piece
 
-  def to_s
-    "[#{type}] #{start_cell} -> #{destination_cell}"
+  def inspect
+    "<#{start_tile} -> #{destination_tile}>"
   end
 
   def call
     return unless can_move?
-    start_cell.piece = Pieces::Null.new
-    destination_cell.piece = moving_piece
+    start_tile.piece = Pieces::Null.new
+    destination_tile.piece = moving_piece
   end
 
   private
@@ -68,29 +67,29 @@ end
 
 # Moves
 ##############################################################################
-# Board and Cell
+# Board and Tile
 
-# Board -> [Move, Cell, Pieces, position]
-# # TODO? Board connects cell and piece?
+# Board -> [Move, Tile, Pieces, position]
+# # TODO? Board connects tile and piece?
 # Borders starting from 0 to 7
 class Board
-  def self.include?(cell)
-    (0..7).to_a.include?(cell.x) &&
-      (0..7).to_a.include?(cell.y)
+  def self.include?(tile)
+    (0..7).to_a.include?(tile.x) &&
+      (0..7).to_a.include?(tile.y)
   end
 
   def self.initial_disposition
     _, p, k = Pieces::Null, Pieces::Pawn, Pieces::King
     [ # A B  C  D  E  F  G  H
-      [p, p, p, k, p, p, p, p].each_with_index.map { |p, i| Cell.new(i, 0, p.new) },
-      [p, p, p, p, p, p, p, p].each_with_index.map { |p, i| Cell.new(i, 1, p.new) },
-      [_, _, _, _, _, _, _, _].each_with_index.map { |p, i| Cell.new(i, 2, p.new) },
-      [_, _, _, _, _, _, _, _].each_with_index.map { |p, i| Cell.new(i, 3, p.new) },
-      [_, _, _, _, _, _, _, _].each_with_index.map { |p, i| Cell.new(i, 4, p.new) },
-      [_, _, _, _, _, _, _, _].each_with_index.map { |p, i| Cell.new(i, 5, p.new) },
-      [p, p, p, p, p, p, p, p].each_with_index.map { |p, i| Cell.new(i, 6, p.new) },
-      [p, p, p, k, p, p, p, p].each_with_index.map { |p, i| Cell.new(i, 7, p.new) },
-    ] # TODO: .reverse # and invert the y value in cell creation, use nil for matrix[0]
+      [p, p, p, k, p, p, p, p].each_with_index.map { |p, i| Tile.new(i, 0, p.new) },
+      [p, p, p, p, p, p, p, p].each_with_index.map { |p, i| Tile.new(i, 1, p.new) },
+      [_, _, _, _, _, _, _, _].each_with_index.map { |p, i| Tile.new(i, 2, p.new) },
+      [_, _, _, _, _, _, _, _].each_with_index.map { |p, i| Tile.new(i, 3, p.new) },
+      [_, _, _, _, _, _, _, _].each_with_index.map { |p, i| Tile.new(i, 4, p.new) },
+      [_, _, _, _, _, _, _, _].each_with_index.map { |p, i| Tile.new(i, 5, p.new) },
+      [p, p, p, p, p, p, p, p].each_with_index.map { |p, i| Tile.new(i, 6, p.new) },
+      [p, p, p, k, p, p, p, p].each_with_index.map { |p, i| Tile.new(i, 7, p.new) },
+    ] # TODO: .reverse # and invert the y value in tile creation, use nil for matrix[0]
   end
 
   def initialize(matrix = self.class.initial_disposition)
@@ -98,13 +97,13 @@ class Board
   end
 
   def move(start_position, destination_position)
-    move = Move.new(cell_at(start_position),
-                    cell_at(destination_position))
+    move = Move.new(tile_at(start_position),
+                    tile_at(destination_position))
     move.call
   end
 
   # E.g.: 'E5'
-  def cell_at(position)
+  def tile_at(position)
     letter_x, letter_y = position.chars
     x = letter_x.upcase.bytes.first - 'A'.bytes.first
     y = letter_y.to_i - 1 # Classic -1: index starting at 0
@@ -118,8 +117,8 @@ class Board
   attr_reader :matrix
 end
 
-# Cell -> [Piece]
-class Cell # TODO: Tile?
+# Tile -> [Piece]
+class Tile
   def initialize(x, y, piece = Pieces::Null.new)
     @x, @y, @piece = x, y, piece
   end
@@ -127,12 +126,12 @@ class Cell # TODO: Tile?
   attr_reader :x, :y
   attr_accessor :piece
 
-  def to_s
-    "#{x},#{y}"
+  def inspect
+    "#<#{self.class}:#{x},#{y}>"
   end
 
-  def ==(other_cell)
-    other_cell.x == x && other_cell.y == y
+  def ==(other_tile)
+    other_tile.x == x && other_tile.y == y
   end
 
   def occupied?
@@ -140,7 +139,7 @@ class Cell # TODO: Tile?
   end
 end
 
-# Board and Cell
+# Board and Tile
 ##############################################################################
 # Pieces
 
@@ -148,14 +147,10 @@ end
 module Pieces
   class Abstract
     def initialize
-      @id = rand # TODO: color
+      @id = rand # TODO: optional naming
     end
 
     attr_reader :id
-
-    def to_s
-      inspect
-    end
 
     def inspect
       "#<#{self.class}:#{id}>"
@@ -173,7 +168,7 @@ module Pieces
   class Pawn < Abstract; end
   class King < Abstract; end
 
-  class Null < Abstract # TODO: singleton
+  class Null < Abstract
     def inspect
       "#<Pieces::Null>"
     end
