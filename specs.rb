@@ -9,9 +9,10 @@ RSpec.describe Move do
   let(:start_piece) { Pieces::Pawn.new }
 
   describe '#call' do
-    context "a pawn attacking off the board" do
-      let(:destination_cell) { Cell.new(0, 2, destination_piece) }
-      let(:destination_piece) { Pieces::Pawn.new }
+    context "a pawn moving off the board" do
+      let(:start_cell) { Cell.new(4, 7, start_piece) }
+      let(:destination_cell) { Cell.new(4, 8, destination_piece) }
+      let(:destination_piece) { Pieces::Null.new }
 
       it "can't move" do
         ok = move.call
@@ -140,13 +141,19 @@ RSpec.describe Board do
       expect(board.cell_at('D1').piece).to eq start_pawn
     end
 
-    xit "takes the pawn to kill the king, but dies before" do
-      board.move('D7', 'D6')
-      board.move('D6', 'D5')
-      board.move('D5', 'D4')
-      board.move('D4', 'D3')
-      board.move('D3', 'D2') # Eat the pawn # TODO: shouln't be able
-      board.move('D2', 'E1') # Kill the king
+    it "takes the pawn to kill the king, but dies before" do
+      attacker = board.cell_at('C2').piece
+
+      expect(board.move('D7', 'D6')).to be_truthy
+      expect(board.move('D6', 'D5')).to be_truthy
+      expect(board.move('D5', 'D4')).to be_truthy
+      expect(board.move('D4', 'D3')).to be_truthy
+
+      expect(board.move('D3', 'D2')).to be_falsey
+      expect(board.move('C2', 'D3')).to be_truthy # The opponent eats
+
+      expect(board.cell_at('D3').piece).to eq attacker
+      expect(board.cell_at('C2')).not_to be_occupied
     end
   end
 

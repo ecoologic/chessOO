@@ -28,8 +28,8 @@ module Moves
     end
 
     def right_attack?
-      ((move.destination_cell.x - move.start_cell.x == 1) &&
-        (move.destination_cell.y - move.start_cell.y == 1))
+      (move.destination_cell.x - move.start_cell.x).abs == 1 &&
+        (move.destination_cell.y - move.start_cell.y).abs == 1
     end
   end
 end
@@ -90,7 +90,7 @@ class Board
       [_, _, _, _, _, _, _, _].each_with_index.map { |p, i| Cell.new(i, 5, p.new) },
       [p, p, p, p, p, p, p, p].each_with_index.map { |p, i| Cell.new(i, 6, p.new) },
       [p, p, p, k, p, p, p, p].each_with_index.map { |p, i| Cell.new(i, 7, p.new) },
-    ] # TODO: .reverse # and invert the y in cell creation, use nil for [0]
+    ] # TODO: .reverse # and invert the y value in cell creation, use nil for matrix[0]
   end
 
   def initialize(matrix = self.class.initial_disposition)
