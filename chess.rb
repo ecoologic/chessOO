@@ -24,8 +24,7 @@ module Moves
 
     def valid_move_destination?
       move.start_cell.x == move.destination_cell.x &&
-        move.destination_cell.x - move.start_cell.x <= 2
-      # TODO: two only for start position
+        move.destination_cell.x - move.start_cell.x <= 1
     end
 
     def right_attack?
@@ -82,7 +81,7 @@ class Board
 
   def self.initial_disposition
     _, p, k = Pieces::Null, Pieces::Pawn, Pieces::King
-    [
+    [ # A B  C  D  E  F  G  H
       [p, p, p, k, p, p, p, p].each_with_index.map { |p, i| Cell.new(i, 0, p.new) },
       [p, p, p, p, p, p, p, p].each_with_index.map { |p, i| Cell.new(i, 1, p.new) },
       [_, _, _, _, _, _, _, _].each_with_index.map { |p, i| Cell.new(i, 2, p.new) },
@@ -91,7 +90,7 @@ class Board
       [_, _, _, _, _, _, _, _].each_with_index.map { |p, i| Cell.new(i, 5, p.new) },
       [p, p, p, p, p, p, p, p].each_with_index.map { |p, i| Cell.new(i, 6, p.new) },
       [p, p, p, k, p, p, p, p].each_with_index.map { |p, i| Cell.new(i, 7, p.new) },
-    ]
+    ] # TODO: .reverse # and invert the y in cell creation, use nil for [0]
   end
 
   def initialize(matrix = self.class.initial_disposition)
@@ -107,7 +106,7 @@ class Board
   # E.g.: 'E5'
   def cell_at(position)
     letter_x, letter_y = position.chars
-    x = letter_x.upcase.bytes.first - 'A'.bytes.first - 1
+    x = letter_x.upcase.bytes.first - 'A'.bytes.first
     y = letter_y.to_i - 1 # Classic -1: index starting at 0
     row = matrix[y]
     row[x]

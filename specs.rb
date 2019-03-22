@@ -77,14 +77,6 @@ RSpec.describe Move do
         end
       end
     end
-
-    context "a pawn moving two forward from starting position" do
-      context "when the corridor is free"
-      context "when the corridor is taken"
-    end
-
-    context "a pawn moving two forward from advanced position" do
-    end
   end
 end
 
@@ -134,7 +126,42 @@ RSpec.describe Board do
       expect(board.cell_at(start_position)).not_to be_occupied
       expect(board.cell_at(destination_position).piece).to eq start_piece
     end
+
+    it "takes the pawn to kill the king" do
+      start_pawn = board.cell_at('B7').piece
+
+      expect(board.move('B7', 'B6')).not_to be_nil
+      expect(board.move('B6', 'B5')).not_to be_nil
+      expect(board.move('B5', 'B4')).not_to be_nil
+      expect(board.move('B4', 'B3')).not_to be_nil
+      expect(board.move('B3', 'C2')).not_to be_nil # Eat the pawn # TODO: not happening
+      expect(board.move('C2', 'D1')).not_to be_nil # Kill the king
+
+      expect(board.cell_at('D1').piece).to eq start_pawn
+    end
+
+    xit "takes the pawn to kill the king, but dies before" do
+      board.move('D7', 'D6')
+      board.move('D6', 'D5')
+      board.move('D5', 'D4')
+      board.move('D4', 'D3')
+      board.move('D3', 'D2') # Eat the pawn # TODO: shouln't be able
+      board.move('D2', 'E1') # Kill the king
+    end
   end
 
-  describe '#cell_at'
+  describe '#cell_at' do
+    subject :board do
+      described_class.new [
+        [Cell.new(0, 0, piece), '01'],
+        %w[10 11]
+      ]
+    end
+
+    let(:piece) { :x }
+
+    it "finds the piece" do
+      expect(board.cell_at('a1').piece).to eq piece
+    end
+  end
 end
