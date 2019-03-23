@@ -69,8 +69,7 @@ end
 ##############################################################################
 # Board and Tile
 
-# Board -> [Move, Tile, Pieces, position]
-# # TODO? Board connects tile and piece?
+# Board -> [Move, Tile, Pieces]
 # Borders starting from 0 to 7
 class Board
   def self.include?(tile)
@@ -81,15 +80,33 @@ class Board
   def self.initial_disposition
     _, p, k = Pieces::Null, Pieces::Pawn, Pieces::King
     [ # A B  C  D  E  F  G  H
-      [p, p, p, k, p, p, p, p].each_with_index.map { |p, i| Tile.new(i, 0, p.new) },
-      [p, p, p, p, p, p, p, p].each_with_index.map { |p, i| Tile.new(i, 1, p.new) },
-      [_, _, _, _, _, _, _, _].each_with_index.map { |p, i| Tile.new(i, 2, p.new) },
-      [_, _, _, _, _, _, _, _].each_with_index.map { |p, i| Tile.new(i, 3, p.new) },
-      [_, _, _, _, _, _, _, _].each_with_index.map { |p, i| Tile.new(i, 4, p.new) },
-      [_, _, _, _, _, _, _, _].each_with_index.map { |p, i| Tile.new(i, 5, p.new) },
-      [p, p, p, p, p, p, p, p].each_with_index.map { |p, i| Tile.new(i, 6, p.new) },
-      [p, p, p, k, p, p, p, p].each_with_index.map { |p, i| Tile.new(i, 7, p.new) },
-    ] # TODO: .reverse # and invert the y value in tile creation, use nil for matrix[0]
+      [p, p, p, k, p, p, p, p].each_with_index.map { |p, x| tile_for([x, 0], p) },
+      [p, p, p, p, p, p, p, p].each_with_index.map { |p, x| tile_for([x, 1], p) },
+      [_, _, _, _, _, _, _, _].each_with_index.map { |p, x| tile_for([x, 2], p) },
+      [_, _, _, _, _, _, _, _].each_with_index.map { |p, x| tile_for([x, 3], p) },
+      [_, _, _, _, _, _, _, _].each_with_index.map { |p, x| tile_for([x, 4], p) },
+      [_, _, _, _, _, _, _, _].each_with_index.map { |p, x| tile_for([x, 5], p) },
+      [p, p, p, p, p, p, p, p].each_with_index.map { |p, x| tile_for([x, 6], p) },
+      [p, p, p, k, p, p, p, p].each_with_index.map { |p, x| tile_for([x, 7], p) },
+    ]
+  end
+
+  def self.tile_for(coordinates, piece_class)
+    x, y = coordinates
+    Tile.new(x, y, piece_class.new)
+  end
+
+  # TODO: Tile.new(position_for(coordinates), piece_class.new)
+  # E.g.: [4, 5] -> 'E6'
+  # def self.position_for(coordinates)
+
+  # E.g.: 'E5' -> [4, 4]
+  def self.coordinates_for(position)
+    letter_x, letter_y = position.chars
+    x = letter_x.upcase.bytes.first - 'A'.bytes.first
+    y = letter_y.to_i - 1 # Classic -1: index starting at 0
+
+    [x, y]
   end
 
   def initialize(matrix = self.class.initial_disposition)
@@ -102,12 +119,10 @@ class Board
     move.call
   end
 
-  # E.g.: 'E5'
   def tile_at(position)
-    letter_x, letter_y = position.chars
-    x = letter_x.upcase.bytes.first - 'A'.bytes.first
-    y = letter_y.to_i - 1 # Classic -1: index starting at 0
+    x, y = self.class.coordinates_for(position)
     row = matrix[y]
+
     row[x]
   end
 

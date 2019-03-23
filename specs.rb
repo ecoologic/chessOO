@@ -1,6 +1,7 @@
 require 'pry'
-require_relative 'chess'
 require 'rspec'
+
+require_relative 'chess'
 
 RSpec.describe Move do
   subject(:move) { described_class.new(start_tile, destination_tile) }
