@@ -5,8 +5,7 @@ module Moves
     def call; false; end
   end
 
-  # TODO: Abstract
-  class Pawn
+  class Abstract
     def initialize(move)
       @move = move
     end
@@ -25,14 +24,12 @@ module Moves
 
     attr_reader :move
 
-    # NOTE: delta_y.abs -> workaround while we don't have colors
     def valid_move?
-      delta_x.zero? && delta_y.abs == 1
+      raise NotImplementedError
     end
 
-    # NOTE: delta_y.abs -> workaround while we don't have colors
     def valid_attack?
-      delta_x.abs == 1 && delta_y.abs == 1
+      raise NotImplementedError
     end
 
     def delta_x
@@ -41,6 +38,18 @@ module Moves
 
     def delta_y
       move.start_tile.coordinates_delta(move.destination_tile).last
+    end
+  end
+
+  class Pawn < Moves::Abstract
+    # NOTE: delta_y.abs -> workaround while we don't have colors
+    def valid_move?
+      delta_x.zero? && delta_y.abs == 1
+    end
+
+    # NOTE: delta_y.abs -> workaround while we don't have colors
+    def valid_attack?
+      delta_x.abs == 1 && delta_y.abs == 1
     end
   end
 end
