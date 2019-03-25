@@ -1,6 +1,15 @@
-# A Ruby Chess Game
+# A Ruby Chess~ish Game
 
-I will never finish this, I'm just interested in some of the challenges of developing it.
+I will never finish this, I'm just interested in some of the challenges in its development.
+
+## Notes
+
+* I've been careful with dependency direction
+* I know I used a sequence diagram instead of a class diagram, I just like the tool
+* Naming, modularity and readability is to my satisfaction
+* It's almost TDD
+* I usually don't leave TODOs in the master branch when working in a team
+* It's a good expression of my current (2019) mastery of the Ruby language
 
 Author: Erik Ecoologic
 

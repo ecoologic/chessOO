@@ -52,7 +52,11 @@ module Moves
     end
 
     def valid_attack?
-      raise NotImplementedError
+      valid_move?
+    end
+
+    def first_occupied_tile
+      move.destination_tile # FIXME: requires board instance var
     end
 
     def delta_coordinates
@@ -78,6 +82,13 @@ module Moves
       delta_x.abs == 1 && delta_y.abs == 1
     end
   end
+
+  class Bishop < Moves::Abstract
+    def valid_move?
+      delta_x.abs == delta_y.abs &&
+        first_occupied_tile == move.destination_tile
+    end
+  end
 end
 
 # Move -> [Moves, Tile]
@@ -85,7 +96,7 @@ class Move
   def initialize(start_tile, destination_tile)
     @start_tile, @destination_tile = start_tile, destination_tile
     @moving_piece = start_tile.piece
-    raise ArgumentError, "Can't move an empty tile" unless start_tile.occupied?
+    raise RuntimeError, "Can't move an empty tile" unless start_tile.occupied?
   end
 
   attr_reader :start_tile, :destination_tile, :moving_piece
@@ -109,7 +120,7 @@ class Move
 end
 
 class Game
-  def initialize(board)
+  def initialize(board = Board.new)
     @board = board
   end
 
@@ -131,25 +142,28 @@ end
 
 # Board -> [Tile, Pieces]
 # Borders starting from 0 to 7
+# TODO: colors
+# TODO? invert direction Tile <- Board ? has_many like?
 class Board
   def self.initial_disposition
-    _, p, k = Pieces::Null, Pieces::Pawn, Pieces::King
-    [ # A B  C  D  E  F  G  H
-      [p, p, p, k, p, p, p, p].each_with_index.map { |p, x| tile_for([x, 0], p) },
-      [p, p, p, p, p, p, p, p].each_with_index.map { |p, x| tile_for([x, 1], p) },
-      [_, _, _, _, _, _, _, _].each_with_index.map { |p, x| tile_for([x, 2], p) },
-      [_, _, _, _, _, _, _, _].each_with_index.map { |p, x| tile_for([x, 3], p) },
-      [_, _, _, _, _, _, _, _].each_with_index.map { |p, x| tile_for([x, 4], p) },
-      [_, _, _, _, _, _, _, _].each_with_index.map { |p, x| tile_for([x, 5], p) },
+    _, p, b, k = Pieces::Null, Pieces::Pawn, Pieces::Bishop, Pieces::King
+    [ # A B  C  D  E  F  G  H  - Black
+      [p, p, b, k, p, b, p, p].each_with_index.map { |p, x| tile_for([x, 7], p) },
       [p, p, p, p, p, p, p, p].each_with_index.map { |p, x| tile_for([x, 6], p) },
-      [p, p, p, k, p, p, p, p].each_with_index.map { |p, x| tile_for([x, 7], p) },
-    ]
+      [_, _, _, _, _, _, _, _].each_with_index.map { |p, x| tile_for([x, 5], p) },
+      [_, _, _, _, _, _, _, _].each_with_index.map { |p, x| tile_for([x, 4], p) },
+      [_, _, _, _, _, _, _, _].each_with_index.map { |p, x| tile_for([x, 3], p) },
+      [_, _, _, _, _, _, _, _].each_with_index.map { |p, x| tile_for([x, 2], p) },
+      [p, p, p, p, p, p, p, p].each_with_index.map { |p, x| tile_for([x, 1], p) },
+      [p, p, b, k, p, b, p, p].each_with_index.map { |p, x| tile_for([x, 0], p) },
+    ].reverse #                - White
   end
 
   def self.tile_for(coordinates, piece_class)
     Tile.new(position_for(coordinates), piece_class.new)
   end
 
+  # TODO? extract Position.new('A1').x
   # E.g.: [4, 5] -> 'E6'
   def self.position_for(coordinates)
     x, y = coordinates
@@ -177,7 +191,7 @@ class Board
     [delta_x, delta_y]
   end
 
-  # TODO: instance method
+  # TODO: instance method relative to board size
   def self.include?(tile)
     ('A'..'G').to_a.include?(tile.letter) &&
       (1..8).to_a.include?(tile.number)
@@ -247,7 +261,7 @@ end
 module Pieces
   class Abstract
     def initialize
-      @id = rand # TODO: optional naming
+      @id = rand # TODO: piece initial position
     end
 
     attr_reader :id
@@ -265,8 +279,10 @@ module Pieces
     end
   end
 
+  # TODO? uhm... so, just @rank = :pawn
   class Pawn < Abstract; end
   class King < Abstract; end
+  class Bishop < Abstract; end
 
   class Null < Abstract
     def inspect
@@ -285,5 +301,6 @@ end
 
 MOVING_RULES = {
   Pieces::Null => Moves::Null,
-  Pieces::Pawn => Moves::Pawn
+  Pieces::Pawn => Moves::Pawn,
+  Pieces::Bishop => Moves::Bishop
 }

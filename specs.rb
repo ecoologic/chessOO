@@ -94,7 +94,7 @@ RSpec.describe Game do
     let(:destination_position) { 'G3' }
 
     it "raises an error if you try to move an empty piece" do
-      expect { game.move('E5', 'E6') }.to raise_error(ArgumentError)
+      expect { game.move('E5', 'E6') }.to raise_error(RuntimeError)
     end
 
     it "moves the piece on the board" do
@@ -131,6 +131,16 @@ RSpec.describe Game do
 
       expect(board.tile_at('D3').piece).to eq attacker
       expect(board.tile_at('C2')).not_to be_occupied
+    end
+
+    it "kills the king with the bishop" do
+      expect(game.move('G2', 'G3')).to be_truthy # Move the white pawn
+      expect(game.move('F1', 'G2')).to be_truthy # Move the white bishop
+      expect(game.move('G2', 'C6')).to be_truthy # Move the bishop again
+      # TODO: expect(game.move('C6', 'E8')).to be_falsey # Attack the black King, Pawn in the way
+
+      expect(game.move('D7', 'D6')).to be_truthy # Move the black pawn away
+      expect(game.move('C6', 'E8')).to be_truthy # Attack the black King
     end
   end
 end
