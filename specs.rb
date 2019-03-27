@@ -174,14 +174,6 @@ RSpec.describe Board do
     end
   end
 
-  describe '.position_for' do
-    it "converts coordinates into position" do
-      expect(described_class.position_for([0, 0])).to eq 'A1'
-      expect(described_class.position_for([1, 2])).to eq 'B3'
-      expect(described_class.position_for([7, 7])).to eq 'H8'
-    end
-  end
-
   describe '#tile_at' do
     subject :board do
       described_class.new [
@@ -194,6 +186,16 @@ RSpec.describe Board do
 
     it "finds the piece" do
       expect(board.tile_at('A1').piece).to eq piece
+    end
+  end
+end
+
+RSpec.describe Position do
+  describe '.from_coordinates' do
+    it "converts coordinates into position" do
+      expect(described_class.from_coordinates([0, 0]).to_s).to eq 'A1'
+      expect(described_class.from_coordinates([1, 2]).to_s).to eq 'B3'
+      expect(described_class.from_coordinates([7, 7]).to_s).to eq 'H8'
     end
   end
 end

@@ -34,7 +34,7 @@ module Moves
     end
 
     def call
-      if !Board.include?(move.destination_tile)
+      if !move.in_board?
         false
       elsif move.destination_tile.occupied?
         valid_attack?
@@ -59,16 +59,12 @@ module Moves
       move.destination_tile # FIXME: requires board instance var
     end
 
-    def delta_coordinates
-      Board.delta_coordinates(move.start_tile, move.destination_tile)
-    end
-
     def delta_x
-      delta_coordinates.first
+      move.delta_position.x
     end
 
     def delta_y
-      delta_coordinates.last
+      move.delta_position.y
     end
   end
 
@@ -112,6 +108,14 @@ class Move
     destination_tile.piece = moving_piece
   end
 
+  def in_board?
+    Board.include?(destination_tile)
+  end
+
+  def delta_position
+    Position.new(start_tile.position).delta(destination_tile.position)
+  end
+
   private
 
   def can_move?
@@ -140,6 +144,50 @@ end
 ##############################################################################
 # Board and Tile
 
+class Position
+  def self.from_coordinates(coordinate_couple)
+    x, y = coordinate_couple
+    letter_x = ('A'.bytes.first + x).chr
+    number_y = y + 1
+
+    new("#{letter_x}#{number_y}")
+  end
+
+  def initialize(value)
+    @x = value.chars.first.upcase.bytes.first - 'A'.bytes.first
+    @y = value.chars.last.to_i - 1 # Classic -1: index starting at 0
+  end
+
+  attr_reader :x, :y
+
+  def to_s
+    "#{letter}#{number}"
+  end
+
+  def coordinates
+    [x, y]
+  end
+
+  def delta(destination_position)
+    delta_x = self.class.new(destination_position).x - x
+    delta_y = self.class.new(destination_position).y - y
+
+    self.class.from_coordinates([delta_x, delta_y])
+  end
+
+  def letter
+    ('A'.bytes.first + x).chr
+  end
+
+  def number
+    y + 1
+  end
+
+  private
+
+  attr_reader :value
+end
+
 # Board -> [Tile, Pieces]
 # Borders starting from 0 to 7
 # TODO: colors
@@ -160,35 +208,7 @@ class Board
   end
 
   def self.tile_for(coordinates, piece_class)
-    Tile.new(position_for(coordinates), piece_class.new)
-  end
-
-  # TODO? extract Position.new('A1').x
-  # E.g.: [4, 5] -> 'E6'
-  def self.position_for(coordinates)
-    x, y = coordinates
-    letter_x = ('A'.bytes.first + x).chr
-    number_y = y + 1
-
-    "#{letter_x}#{number_y}"
-  end
-
-  # E.g.: 'E5' -> [4, 4]
-  def self.coordinates_for(position)
-    letter_x, letter_y = position.chars
-    x = letter_x.upcase.bytes.first - 'A'.bytes.first
-    y = letter_y.to_i - 1 # Classic -1: index starting at 0
-
-    [x, y] # TODO: raise unless include
-  end
-
-  def self.delta_coordinates(start_tile, destination_tile)
-    start_x, start_y = coordinates_for(start_tile.position)
-    destination_x, destination_y = coordinates_for(destination_tile.position)
-    delta_x = destination_x - start_x
-    delta_y = destination_y - start_y
-
-    [delta_x, delta_y]
+    Tile.new(Position.from_coordinates(coordinates).to_s, piece_class.new)
   end
 
   # TODO: instance method relative to board size
@@ -202,7 +222,7 @@ class Board
   end
 
   def tile_at(position)
-    x, y = self.class.coordinates_for(position)
+    x, y = Position.new(position).coordinates
     row = matrix[y]
 
     row[x]
@@ -217,7 +237,7 @@ end
 # Tile -> [Piece]
 class Tile
   def initialize(position, piece = Pieces::Null.new)
-    @position, @piece = position, piece
+    @position, @piece = position, piece # TODO: position_value (max)
   end
 
   attr_reader :position
@@ -236,8 +256,8 @@ class Tile
   end
 
   def coordinates_delta(other_tile)
-    x, y = Board.coordinates_for(position) # FIXME: dep direction
-    other_x, other_y = Board.coordinates_for(other_tile.position)
+    x, y = Position.new(position).coordinates # FIXME: dep direction
+    other_x, other_y = Position.new(other_tile.position).coordinates
 
     [(other_x - x), (other_y - y)]
   end
