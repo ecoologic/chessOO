@@ -21,6 +21,7 @@
 # Board->Tile:
 # Board->Pieces/Pawn:
 
+# TODO: 1) Split file; 2) Update diagram; 3) Tile -> Board?; 4) Board.new
 # Moves -> [Move, Board, Tile]
 module Moves
   class Null
@@ -101,6 +102,7 @@ class Move
     "<#{start_tile} -> #{destination_tile}>"
   end
 
+  # NOTE: Mutates the states of tiles at runtime, not idempotent method
   def call
     return unless can_move?
 
@@ -113,7 +115,7 @@ class Move
   end
 
   def delta_position
-    Position.new(start_tile.position).delta(destination_tile.position)
+    start_tile.position.delta(destination_tile.position)
   end
 
   private
@@ -128,9 +130,9 @@ class Game
     @board = board
   end
 
-  def move(start_position, destination_position)
-    start_tile = board.tile_at(start_position)
-    destination_tile = board.tile_at(destination_position)
+  def move(start_position_value, destination_position_value)
+    start_tile = board.tile_at(start_position_value)
+    destination_tile = board.tile_at(destination_position_value)
 
     Move.new(start_tile, destination_tile).call
   end
@@ -164,13 +166,17 @@ class Position
     "#{letter}#{number}"
   end
 
+  def ==(other_position)
+    to_s == other_position.to_s
+  end
+
   def coordinates
     [x, y]
   end
 
   def delta(destination_position)
-    delta_x = self.class.new(destination_position).x - x
-    delta_y = self.class.new(destination_position).y - y
+    delta_x = destination_position.x - x
+    delta_y = destination_position.y - y
 
     self.class.from_coordinates([delta_x, delta_y])
   end
@@ -190,7 +196,6 @@ end
 
 # Board -> [Tile, Pieces]
 # Borders starting from 0 to 7
-# TODO: colors
 # TODO? invert direction Tile <- Board ? has_many like?
 class Board
   def self.initial_disposition
@@ -208,21 +213,22 @@ class Board
   end
 
   def self.tile_for(coordinates, piece_class)
-    Tile.new(Position.from_coordinates(coordinates).to_s, piece_class.new)
+    Tile.new(Position.from_coordinates(coordinates).to_s, piece_class.new(coordinates))
   end
 
   # TODO: instance method relative to board size
   def self.include?(tile)
-    ('A'..'G').to_a.include?(tile.letter) &&
-      (1..8).to_a.include?(tile.number)
+    ('A'..'G').to_a.include?(tile.position.letter) &&
+      (1..8).to_a.include?(tile.position.number)
   end
 
   def initialize(matrix = self.class.initial_disposition)
     @matrix = matrix
   end
 
-  def tile_at(position)
-    x, y = Position.new(position).coordinates
+  # TODO? invert direction Board <-> Tile ?
+  def tile_at(position_value)
+    x, y = Position.new(position_value).coordinates
     row = matrix[y]
 
     row[x]
@@ -235,41 +241,27 @@ class Board
 end
 
 # Tile -> [Piece]
+# NOTE: mutable object
 class Tile
-  def initialize(position, piece = Pieces::Null.new)
-    @position, @piece = position, piece # TODO: position_value (max)
+  def initialize(position_value, piece = Pieces::Null.new)
+    @position = Position.new(position_value)
+    @position_value = position_value # TODO: remove in tests
+    @piece = piece
   end
 
-  attr_reader :position
+  attr_reader :position, :position_value
   attr_accessor :piece
 
   def inspect
-    "#<#{self.class}:#{position}>"
+    "#<#{self.class}:#{position_value}>"
   end
 
   def ==(other_tile)
-    other_tile.position == position
+    position == other_tile.position
   end
 
   def occupied?
     piece.present?
-  end
-
-  def coordinates_delta(other_tile)
-    x, y = Position.new(position).coordinates # FIXME: dep direction
-    other_x, other_y = Position.new(other_tile.position).coordinates
-
-    [(other_x - x), (other_y - y)]
-  end
-
-  # TODO: tmp
-
-  def letter
-    position.chars.first
-  end
-
-  def number
-    position.chars.last.to_i
   end
 end
 
@@ -280,8 +272,9 @@ end
 # Pieces -> [Piece]
 module Pieces
   class Abstract
-    def initialize
-      @id = rand # TODO: piece initial position
+    # TODO: remove optional
+    def initialize(id = rand)
+      @id = "#{self.class}##{id}"
     end
 
     attr_reader :id
@@ -299,7 +292,6 @@ module Pieces
     end
   end
 
-  # TODO? uhm... so, just @rank = :pawn
   class Pawn < Abstract; end
   class King < Abstract; end
   class Bishop < Abstract; end

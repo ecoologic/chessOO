@@ -155,10 +155,10 @@ RSpec.describe Board do
     let(:last_tile) { disposition.last.last }
 
     it "sets the tiles coordinates" do
-      expect(disposition.first.first.position).to eq 'A1'
-      expect(disposition.first.last.position).to eq 'H1'
-      expect(disposition.last.first.position).to eq 'A8'
-      expect(disposition.last.last.position).to eq 'H8'
+      expect(disposition.first.first.position_value).to eq 'A1'
+      expect(disposition.first.last.position_value).to eq 'H1'
+      expect(disposition.last.first.position_value).to eq 'A8'
+      expect(disposition.last.last.position_value).to eq 'H8'
     end
 
     it "puts pawns on the second and second last row" do
