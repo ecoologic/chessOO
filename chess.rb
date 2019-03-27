@@ -125,6 +125,7 @@ class Move
   end
 end
 
+# TODO? Turn?
 class Game
   def initialize(board = Board.new)
     @board = board
@@ -146,6 +147,7 @@ end
 ##############################################################################
 # Board and Tile
 
+# TODO: descr
 class Position
   def self.from_coordinates(coordinate_couple)
     x, y = coordinate_couple
@@ -195,8 +197,6 @@ class Position
 end
 
 # Board -> [Tile, Pieces]
-# Borders starting from 0 to 7
-# TODO? invert direction Tile <- Board ? has_many like?
 class Board
   def self.initial_disposition
     _, p, b, k = Pieces::Null, Pieces::Pawn, Pieces::Bishop, Pieces::King
@@ -212,12 +212,14 @@ class Board
     ].reverse #                - White
   end
 
+  # TODO? move in Tile.new ?
   def self.tile_for(coordinates, piece_class)
     Tile.new(Position.from_coordinates(coordinates).to_s, piece_class.new(coordinates))
   end
 
   # TODO: instance method relative to board size
   def self.include?(tile)
+    # TODO: tile.position.included?(board.max_coordinates)
     ('A'..'G').to_a.include?(tile.position.letter) &&
       (1..8).to_a.include?(tile.position.number)
   end
@@ -226,7 +228,7 @@ class Board
     @matrix = matrix
   end
 
-  # TODO? invert direction Board <-> Tile ?
+  # TODO? move in Tile?
   def tile_at(position_value)
     x, y = Position.new(position_value).coordinates
     row = matrix[y]
@@ -252,10 +254,6 @@ class Tile
   attr_reader :position, :position_value
   attr_accessor :piece
 
-  def inspect
-    "#<#{self.class}:#{position_value}>"
-  end
-
   def ==(other_tile)
     position == other_tile.position
   end
@@ -272,19 +270,14 @@ end
 # Pieces -> [Piece]
 module Pieces
   class Abstract
-    # TODO: remove optional
-    def initialize(id = rand)
-      @id = "#{self.class}##{id}"
+    def initialize(description = object_id)
+      @description = description
     end
 
-    attr_reader :id
-
-    def inspect
-      "#<#{self.class}:#{id}>"
-    end
+    attr_reader :description
 
     def ==(other_piece)
-      other_piece.id == id
+      self === other_piece
     end
 
     def present?
@@ -297,10 +290,6 @@ module Pieces
   class Bishop < Abstract; end
 
   class Null < Abstract
-    def inspect
-      "#<Pieces::Null>"
-    end
-
     def ==(other_piece)
       !other_piece.present?
     end
