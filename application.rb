@@ -21,6 +21,8 @@
 # Board->Tile:
 # Board->Pieces/Pawn:
 
+# TODO: 2) Update diagram; 3) Tile -> Board?; 4) Board.new
+
 require_relative 'app/board'
 require_relative 'app/game'
 require_relative 'app/move'
@@ -28,10 +30,6 @@ require_relative 'app/moves'
 require_relative 'app/pieces'
 require_relative 'app/position'
 require_relative 'app/tile'
-
-
-# TODO: 1) Split file; 2) Update diagram; 3) Tile -> Board?; 4) Board.new
-# TODO: 2) Guardfile
 
 MOVING_RULES = {
   Pieces::Null => Moves::Null,
