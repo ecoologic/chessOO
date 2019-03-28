@@ -1,4 +1,4 @@
-# Moves -> [Move, Board, Tile]
+# Moves -> [Move, Tile]
 module Moves
   class Null
     def initialize(_move); end

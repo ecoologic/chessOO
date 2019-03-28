@@ -1,4 +1,5 @@
-# Move -> [Moves, Tile]
+# Executes one valid move or attack within the rules of the game
+# Move -> [Board, Tile, Pieces, Position]
 class Move
   def initialize(start_tile, destination_tile)
     @start_tile, @destination_tile = start_tile, destination_tile

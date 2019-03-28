@@ -1,4 +1,4 @@
-# Tile -> [Piece]
+# Tile -> [Pieces, Position]
 # NOTE: mutable object
 class Tile
   def initialize(position_value, piece = Pieces::Null.new)

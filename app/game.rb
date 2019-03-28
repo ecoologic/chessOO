@@ -1,4 +1,5 @@
 # TODO? Turn?
+# Game -> [Moves, Board]
 class Game
   def initialize(board = Board.new)
     @board = board
