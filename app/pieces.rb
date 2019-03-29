@@ -1,15 +1,15 @@
 # Pieces -> [Piece]
 module Pieces
   class Abstract
+    def self.to_sym
+      to_s['Pieces::'.length, 2].to_sym
+    end
+
     def initialize(description = object_id)
       @description = description
     end
 
     attr_reader :description
-
-    def ==(other_piece)
-      self === other_piece
-    end
 
     def present?
       true
@@ -17,11 +17,17 @@ module Pieces
   end
 
   class Pawn < Abstract; end
-  class King < Abstract; end
-  class Bishop < Abstract; end
+  class Tower < Abstract; end
   class Knight < Abstract; end
+  class Bishop < Abstract; end
+  class Queen < Abstract; end
+  class King < Abstract; end
 
   class Null < Abstract
+    def self.to_sym
+      '__'
+    end
+
     def ==(other_piece)
       !other_piece.present?
     end

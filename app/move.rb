@@ -10,6 +10,7 @@ class Move
   attr_reader :start_tile, :destination_tile, :moving_piece
 
   # NOTE: Mutates the states of tiles at runtime, not idempotent method
+  # TODO: check Game.on?
   def call
     return unless can_move?
 
