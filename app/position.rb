@@ -1,4 +1,5 @@
-# TODO: descr
+# Wraps the info 'A1' to provides helper methods
+# like coordinates [x, y], distances etc
 class Position
   def self.from_coordinates(coordinate_couple)
     x, y = coordinate_couple
@@ -23,6 +24,7 @@ class Position
     to_s == other_position.to_s
   end
 
+  # 'B3' => [1, 2]
   def coordinates
     [x, y]
   end

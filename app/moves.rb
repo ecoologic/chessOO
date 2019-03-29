@@ -36,6 +36,7 @@ module Moves
       move.destination_tile # FIXME: requires board instance var
     end
 
+    # TODO: delta_coordinates
     def delta_x
       move.delta_position.x
     end
@@ -60,6 +61,14 @@ module Moves
     def valid_move?
       delta_x.abs == delta_y.abs &&
         first_occupied_tile == move.destination_tile
+    end
+  end
+
+  class Knight < Moves::Abstract
+    def valid_move?
+      # OR move.delta_position.coordinates.sort.map(&:abs) == [1, 2]
+      delta_x.abs == 2 && delta_y == 1 ||
+        delta_x.abs == 1 && delta_y.abs == 2
     end
   end
 end

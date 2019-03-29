@@ -1,16 +1,16 @@
 # Board -> [Tile, Pieces]
 class Board
   def self.initial_disposition
-    _, p, b, k = Pieces::Null, Pieces::Pawn, Pieces::Bishop, Pieces::King
+    _, p, n, b, k = Pieces::Null, Pieces::Pawn, Pieces::Knight, Pieces::Bishop, Pieces::King
     [ # A B  C  D  E  F  G  H  - Black
-      [p, p, b, k, p, b, p, p].each_with_index.map { |p, x| tile_for([x, 7], p) },
-      [p, p, p, p, p, p, p, p].each_with_index.map { |p, x| tile_for([x, 6], p) },
-      [_, _, _, _, _, _, _, _].each_with_index.map { |p, x| tile_for([x, 5], p) },
-      [_, _, _, _, _, _, _, _].each_with_index.map { |p, x| tile_for([x, 4], p) },
-      [_, _, _, _, _, _, _, _].each_with_index.map { |p, x| tile_for([x, 3], p) },
-      [_, _, _, _, _, _, _, _].each_with_index.map { |p, x| tile_for([x, 2], p) },
-      [p, p, p, p, p, p, p, p].each_with_index.map { |p, x| tile_for([x, 1], p) },
-      [p, p, b, k, p, b, p, p].each_with_index.map { |p, x| tile_for([x, 0], p) },
+      [p, n, b, k, p, b, n, p].each_with_index.map { |pc, x| tile_for([x, 7], pc) },
+      [p, p, p, p, p, p, p, p].each_with_index.map { |pc, x| tile_for([x, 6], pc) },
+      [_, _, _, _, _, _, _, _].each_with_index.map { |pc, x| tile_for([x, 5], pc) },
+      [_, _, _, _, _, _, _, _].each_with_index.map { |pc, x| tile_for([x, 4], pc) },
+      [_, _, _, _, _, _, _, _].each_with_index.map { |pc, x| tile_for([x, 3], pc) },
+      [_, _, _, _, _, _, _, _].each_with_index.map { |pc, x| tile_for([x, 2], pc) },
+      [p, p, p, p, p, p, p, p].each_with_index.map { |pc, x| tile_for([x, 1], pc) },
+      [p, n, b, k, p, b, n, p].each_with_index.map { |pc, x| tile_for([x, 0], pc) },
     ].reverse #                - White
   end
 

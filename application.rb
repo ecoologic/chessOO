@@ -9,5 +9,6 @@ require_relative 'app/tile'
 MOVING_RULES = {
   Pieces::Null => Moves::Null,
   Pieces::Pawn => Moves::Pawn,
-  Pieces::Bishop => Moves::Bishop
+  Pieces::Bishop => Moves::Bishop,
+  Pieces::Knight => Moves::Knight
 }

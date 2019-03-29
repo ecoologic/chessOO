@@ -2,11 +2,12 @@ require 'spec_helper'
 
 RSpec.describe Game do
   subject(:game) { described_class.new(board) }
-  let!(:start_piece) { board.tile_at(start_position).piece }
 
   let(:board) { Board.new }
 
   describe '#move' do
+    let!(:start_piece) { board.tile_at(start_position).piece }
+
     let(:start_position) { 'G2' }
     let(:destination_position) { 'G3' }
 
@@ -58,6 +59,13 @@ RSpec.describe Game do
 
       expect(game.move('D7', 'D6')).to be_truthy # Move the black pawn away
       expect(game.move('C6', 'E8')).to be_truthy # Attack the black King
+    end
+
+    it "kills the king with a knight" do
+      expect(game.move('B1', 'C3')).to be_truthy # Move the white pawn
+      expect(game.move('C3', 'D5')).to be_truthy # Move the white pawn
+
+      expect(game.move('D5', 'C7')).to be_truthy # Kill the king
     end
   end
 end

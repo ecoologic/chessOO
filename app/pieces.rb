@@ -19,6 +19,7 @@ module Pieces
   class Pawn < Abstract; end
   class King < Abstract; end
   class Bishop < Abstract; end
+  class Knight < Abstract; end
 
   class Null < Abstract
     def ==(other_piece)
