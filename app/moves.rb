@@ -1,8 +1,20 @@
 # Moves -> [Move, Tile]
 module Moves
+  # TODO: Any better than a module? (methods are shared)
   module Common
+    # TODO: rename of_one?
     def move_of_one?
       [0, delta_x.abs, delta_y.abs, 1].minmax == [0, 1]
+    end
+
+    def diagonal?
+      (delta_x.abs == delta_y.abs) &&
+        first_occupied_tile == move.destination_tile
+    end
+
+    def along_axes?
+      (delta_x.zero? || delta_y.zero?) &&
+        first_occupied_tile == move.destination_tile
     end
   end
 
@@ -53,6 +65,8 @@ module Moves
   end
 
   # NOTE: position.abs -> workaround while we don't have black/white player
+  # # TODO: make valid_move? private for all
+  # TODO? rename valid?
   class Pawn < Moves::Abstract
     def valid_move?
       delta_x.zero? && delta_y.abs == 1
@@ -63,20 +77,25 @@ module Moves
     end
   end
 
-  class Moves::Tower < Moves::Abstract; end
+  class Moves::Tower < Moves::Abstract
+    include Common
+
+    def valid_move?
+      along_axes?
+    end
+  end
 
   class Knight < Moves::Abstract
     def valid_move?
-      # OR move.delta_coordinates.coordinates.sort.map(&:abs) == [1, 2]
-      delta_x.abs == 2 && delta_y == 1 ||
-        delta_x.abs == 1 && delta_y.abs == 2
+      [delta_x.abs, delta_y.abs].sort == [1, 2]
     end
   end
 
   class Bishop < Moves::Abstract
+    include Common
+
     def valid_move?
-      delta_x.abs == delta_y.abs &&
-        first_occupied_tile == move.destination_tile
+      diagonal?
     end
   end
 
