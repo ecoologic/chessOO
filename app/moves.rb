@@ -38,11 +38,11 @@ module Moves
 
     # TODO: delta_coordinates
     def delta_x
-      move.delta_position.x
+      move.delta_coordinates.x
     end
 
     def delta_y
-      move.delta_position.y
+      move.delta_coordinates.y
     end
   end
 
@@ -66,7 +66,7 @@ module Moves
 
   class Knight < Moves::Abstract
     def valid_move?
-      # OR move.delta_position.coordinates.sort.map(&:abs) == [1, 2]
+      # OR move.delta_coordinates.coordinates.sort.map(&:abs) == [1, 2]
       delta_x.abs == 2 && delta_y == 1 ||
         delta_x.abs == 1 && delta_y.abs == 2
     end

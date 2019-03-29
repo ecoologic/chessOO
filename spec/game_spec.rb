@@ -61,6 +61,7 @@ RSpec.describe Game do
       expect(game.move('C6', 'E8')).to be_truthy # Attack the black King
     end
 
+    # TODO: verify the king is dead
     it "kills the king with a knight" do
       expect(game.move('B1', 'C3')).to be_truthy # Move the white pawn
       expect(game.move('C3', 'D5')).to be_truthy # Move the white pawn

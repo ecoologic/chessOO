@@ -21,7 +21,7 @@ class Move
     Board.include?(destination_tile)
   end
 
-  def delta_position
+  def delta_coordinates
     start_tile.position.delta(destination_tile.position)
   end
 
