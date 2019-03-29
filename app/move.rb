@@ -18,6 +18,10 @@ class Move
     destination_tile.piece = moving_piece
   end
 
+  def standing?
+    start_tile == destination_tile
+  end
+
   def in_board?
     Board.include?(destination_tile)
   end

@@ -7,6 +7,18 @@ RSpec.describe Move do
   let(:start_piece) { Pieces::Pawn.new }
 
   describe '#call' do
+    let(:destination_tile) { Tile.new('E9', destination_piece) }
+    let(:destination_piece) { Pieces::Null.new }
+
+    # TODO? rename start -> beginning
+    it "is standing when the start is the destination" do
+      expect(described_class.new(start_tile, start_tile)).to be_standing
+    end
+
+    it "is NOT standing when the start is the destination" do
+      expect(described_class.new(start_tile, destination_tile)).not_to be_standing
+    end
+
     context "a pawn moving off the board" do
       let(:start_tile) { Tile.new('E8', start_piece) }
       let(:destination_tile) { Tile.new('E9', destination_piece) }
