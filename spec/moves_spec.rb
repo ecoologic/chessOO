@@ -9,14 +9,10 @@ RSpec.describe Moves::Tower do
 
   describe '#valid?' do
     it "is true when moved along axes" do
-      allow(valid_move).to receive(:in_board?).and_return(true)
-
       expect(described_class.new(valid_move)).to be_valid
     end
 
     it "is false when moved 2 ahead" do
-      allow(valid_move).to receive(:in_board?).and_return(true)
-
       expect(described_class.new(invalid_move)).not_to be_valid
     end
   end

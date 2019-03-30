@@ -45,7 +45,7 @@ class Board
     [
       "\n     .A .B .C .D .E .F .G .H",
       result,
-      "   .A .B .C .D .E .F .G .H"
+      "     .A .B .C .D .E .F .G .H"
     ].compact.join("\n")
   end
 

@@ -6,13 +6,11 @@ module Moves
     end
 
     def diagonal?
-      (delta_x.abs == delta_y.abs) &&
-        first_occupied_tile == move.destination_tile
+      (delta_x.abs == delta_y.abs) && move.free_corridor?
     end
 
     def along_axes?
-      (delta_x.zero? || delta_y.zero?) &&
-        first_occupied_tile == move.destination_tile
+      (delta_x.zero? || delta_y.zero?) && move.free_corridor?
     end
   end
 
@@ -44,7 +42,7 @@ module Moves
     end
 
     def first_occupied_tile
-      move.destination_tile # FIXME: requires board instance var
+      move.destination_tile
     end
 
     def delta_x

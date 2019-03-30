@@ -33,6 +33,15 @@ class Position
     [x, y]
   end
 
+  def all_between(destination_position)
+    x_range = Range.new(*[destination_position.x, x].sort)
+    y_range = Range.new(*[destination_position.y, y].sort)
+    zipped = x_range.zip(y_range)
+
+    result = zipped.map { |x, y| self.class.from_coordinates([x, y]) }
+    result[1..result.length - 2] # Exclude start and destination
+  end
+
   def delta(destination_position)
     delta_x = destination_position.x - x
     delta_y = destination_position.y - y
