@@ -11,7 +11,7 @@ class Tile
   attr_accessor :piece
 
   def inspect
-    "#<#{position_value}:#{piece.to_sym}>"
+    "#<Tile:#{position_value}:#{piece.to_sym}>"
   end
 
   def ==(other_tile)

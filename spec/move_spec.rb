@@ -9,14 +9,15 @@ RSpec.describe Move do
   let(:destination_position_value) { 'E9' }
 
   describe '#free_corridor?' do
-    xit "is true when no other piece is on the way (tower)" do
-      board.tile_at('A2').piece = Pieces::Null.new
-      move = described_class.new(board, board.tile_at('A1'), board.tile_at('A5'))
+    it "is true when no other piece is on the way (tower)" do
+      expect(described_class.new(board, board.tile_at('A1'), board.tile_at('A2'))).to be_truthy
+
+      move = described_class.new(board, board.tile_at('A2'), board.tile_at('A7'))
 
       expect(move).to be_free_corridor
     end
 
-    xit "is false when another piece is on the way (tower)" do
+    it "is false when another piece is on the way (tower)" do
       move = described_class.new(board, board.tile_at('A1'), board.tile_at('A5'))
 
       expect(move).not_to be_free_corridor

@@ -17,7 +17,7 @@ class Position
   attr_reader :x, :y
 
   def inspect
-    "#<#{to_s}>"
+    "#<Position:#{to_s}>"
   end
 
   def to_s
@@ -33,13 +33,13 @@ class Position
     [x, y]
   end
 
+  # TODO: Position::Delta ??
   def all_between(destination_position)
-    x_range = Range.new(*[destination_position.x, x].sort)
-    y_range = Range.new(*[destination_position.y, y].sort)
-    zipped = x_range.zip(y_range)
-
-    result = zipped.map { |x, y| self.class.from_coordinates([x, y]) }
-    result[1..result.length - 2] # Exclude start and destination
+    if delta(destination_position).x.zero? || delta(destination_position).y.zero?
+      all_between_along_axes(destination_position)
+    else
+      all_between_diagonal(destination_position)
+    end
   end
 
   def delta(destination_position)
@@ -60,4 +60,28 @@ class Position
   private
 
   attr_reader :value
+
+  # TODO: all_along_diagonal
+  def all_between_diagonal(destination_position)
+    x_range = Range.new(*[destination_position.x, x].sort)
+    y_range = Range.new(*[destination_position.y, y].sort)
+    zipped = x_range.zip(y_range)
+
+    result = zipped.map { |x, y| self.class.from_coordinates([x, y]) }
+    result[1..result.length - 2] # Exclude start and destination
+  end
+
+  def all_between_along_axes(destination_position)
+    if letter == destination_position.letter
+      # Loop numbers
+      y_range = Range.new(*[destination_position.y, y].sort)
+      result = y_range.map { |path_y| self.class.new("#{letter}#{path_y + 1}") }
+      result[1..result.length - 2] # Exclude start and destination
+    else
+      # Loop letters
+      x_range = Range.new(*[destination_position.x, x].sort)
+      # TODO:
+      [self.class.new('E1')]
+    end
+  end
 end

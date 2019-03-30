@@ -32,7 +32,7 @@ class Move
 
   def free_corridor?
     positions = start_tile.position.all_between(destination_tile.position)
-    positions.all? { |p| !board.tile_at(p.to_s).occupied? }
+    positions.select { |p| board.tile_at(p.to_s).occupied? }.empty?
   end
 
   private

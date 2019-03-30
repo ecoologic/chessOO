@@ -12,7 +12,7 @@ module Pieces
     attr_reader :description
 
     def inspect
-      %(#<#{to_sym}:piece_start=#{description}>)
+      %(#<#{self.class}:init-#{description}>)
     end
 
     def to_sym

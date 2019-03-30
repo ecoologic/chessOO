@@ -3,12 +3,13 @@ require_relative 'spec_helper'
 RSpec.describe Moves::Tower do
   include_examples :lets
 
-  let(:start_tile) { Tile.new('E5', Pieces::Tower.new) }
-  let(:valid_destination_tile) { Tile.new('E1') }
+  let(:start_tile) { board.tile_at('A1') }
+  let(:valid_destination_tile) { Tile.new('A5') }
   let(:invalid_destination_tile) { Tile.new('B7') }
 
   describe '#valid?' do
-    it "is true when moved along axes" do
+    it "is true when moved along empty axes" do
+      board.tile_at('A2').piece = Pieces::Null.new
       expect(described_class.new(valid_move)).to be_valid
     end
 
@@ -67,14 +68,10 @@ RSpec.describe Moves::King do
 
   describe '#valid?' do
     it "is true when moved one diagonal" do
-      allow(valid_move).to receive(:in_board?).and_return(true)
-
       expect(described_class.new(valid_move)).to be_valid
     end
 
     it "is false when moved 2 ahead" do
-      allow(valid_move).to receive(:in_board?).and_return(true)
-
       expect(described_class.new(invalid_move)).not_to be_valid
     end
   end
