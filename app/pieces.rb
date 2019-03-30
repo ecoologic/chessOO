@@ -1,23 +1,11 @@
 # Pieces -> [Piece]
 module Pieces
   class Abstract
-    def self.to_sym
-      to_s['Pieces::'.length, 2].to_sym
-    end
-
     def initialize(description = object_id)
       @description = description
     end
 
     attr_reader :description
-
-    def inspect
-      %(#<#{self.class}:init-#{description}>)
-    end
-
-    def to_sym
-      self.class.to_sym
-    end
 
     def present?
       true
@@ -32,10 +20,6 @@ module Pieces
   class King < Abstract; end
 
   class Null < Abstract
-    def self.to_sym
-      '__'
-    end
-
     def ==(other_piece)
       !other_piece.present?
     end

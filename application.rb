@@ -5,7 +5,11 @@ require_relative 'app/moves'
 require_relative 'app/pieces'
 require_relative 'app/position'
 require_relative 'app/tile'
+require_relative 'app/presentation'
 
+# TODO: move
+# TODO: MOVE_RULE_BY_PIECE
+#       Moves -> MoveRule
 MOVING_RULES = {
   Pieces::Null => Moves::Null,
   Pieces::Pawn => Moves::Pawn,

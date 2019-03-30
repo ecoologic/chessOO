@@ -4,13 +4,10 @@ class Game
     @board = board
   end
 
-  def inspect
-    "#<Game>"
-  end
-
+  # Game.new.move('E2', 'E3')
   def move(start_position_value, destination_position_value)
-    return unless board.include?(destination_position_value)
     return unless on?
+    return unless board.include?(destination_position_value)
 
     start_tile = board.tile_at(start_position_value)
     destination_tile = board.tile_at(destination_position_value)

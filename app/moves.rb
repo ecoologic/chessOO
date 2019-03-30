@@ -29,10 +29,6 @@ module Moves
       end
     end
 
-    def inspect
-      "#<#{self.class}:#{move.inspect}>"
-    end
-
     private
 
     attr_reader :move

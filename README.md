@@ -1,12 +1,17 @@
 # A Ruby Chess~ish Game
 
+Currently is doing all the basic moves, but no fancy ones like casteling.
+
 I will never finish this, I'm just interested in some of the challenges
 related to modelling the rules of the game.
-
 While this is a pretty unlikely domain to model at work,
-it's a good expression of my current (2019) modelling skills.
+it's a good expression of my current (2019) modelling skills using
+Object Oriented languages.
 
 There is no frontend, the specs are the only consumers.
+Take a peek starting at `spec/game_spec.rb:40`.
+
+Feel free to contact me for design questions or lessons.
 
 ```
 puts Board.new
@@ -29,7 +34,7 @@ puts Board.new
 * Naming, modularity and readability is to my satisfaction
 * It's almost TDD
 * I usually don't leave TODOs in the master branch when working in a team
-
+* Git history is not too bad
 
 ## Design
 
@@ -81,7 +86,7 @@ Tile->Position:
 
 ```
 bin/bundle
-bin/rspec
+bin/rspec --format documentation
 ```
 
 That's it, there are only specs.
@@ -89,7 +94,7 @@ That's it, there are only specs.
 
 ## Development
 
-Keep guard up, write some spec and make it green.
+Keep guard up, write a spec and make it green.
 
 ```
 bin/guard
@@ -100,19 +105,22 @@ bin/guard
 ### Chess TODOs
 
 * COLORS!!
-* Bishop/Tower corridor check
 * Castelling
 * Pawns enpassant
 * Pawn enpassant kill
 * Pawn promotion
 * Pawn opening of 2
-* King available moves
+* King under attack
 * Draw rules
 
 ### Tech TODOs
 
+* Consolidate `Position::Delta`
+* Rename `MOVING_RULES`
+* Update diagram
 * Rcov?
-* `Moves::Queen` etc, make `Common` private
+* Review private methods
+* Make `Common` private
 
 #### Maybes
 
@@ -120,14 +128,14 @@ bin/guard
 * Rename `start -> beginning` or `initial, final`, or...
 * Invert dependency direction `Title -> Board`
 * Rename `Game -> Turn`
+* Move returning `destination_position`
+* Reply to https://codereview.stackexchange.com/questions/116994/object-oriented-chess-game-in-ruby
 
 
 ## Closing
 
 Licence: See MIT-LICENCE file, no surprises there.
 
-Contributions: Sure, why not.
+Contributions: Sure, why not, follow _any_ template.
 
-Author: Erik Ecoologic
-
-Feel free to contact me for design questions or lessons.
+Have a good day!

@@ -8,11 +8,10 @@ class Position
 
     # TODO: all_along_diagonal
     def all_between_diagonal
-      x_range = Range.new(*[position_a.x, position_b.x].sort)
-      y_range = Range.new(*[position_a.y, position_b.y].sort)
-      zipped = x_range.zip(y_range)
+      result = x_range.zip(y_range).map do |x, y|
+        Position.from_coordinates([x, y])
+      end
 
-      result = zipped.map { |x, y| Position.from_coordinates([x, y]) }
       result[1..result.length - 2] # Exclude start and destination
     end
 
@@ -20,7 +19,6 @@ class Position
     def all_between_along_axes
       if position_a.letter == position_b.letter
         # Loop numbers
-        y_range = Range.new(*[position_a.y, position_b.y].sort)
         result = y_range.map { |path_y| Position.new("#{position_a.letter}#{path_y + 1}") }
         result[1..result.length - 2] # Exclude start and destination
       else
@@ -49,6 +47,14 @@ class Position
     private
 
     attr_reader :position_a, :position_b
+
+    def x_range
+      Range.new(*[position_a.x, position_b.x].sort)
+    end
+
+    def y_range
+      Range.new(*[position_a.y, position_b.y].sort)
+    end
   end
 
   def self.from_coordinates(coordinate_couple)
@@ -65,14 +71,6 @@ class Position
   end
 
   attr_reader :x, :y
-
-  def inspect
-    "#<Position:#{to_s}>"
-  end
-
-  def to_s
-    "#{letter}#{number}"
-  end
 
   def ==(other_position)
     to_s == other_position.to_s
