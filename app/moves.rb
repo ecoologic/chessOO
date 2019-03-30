@@ -2,15 +2,15 @@
 module Moves
   module Common
     def one_step?
-      [0, delta_x.abs, delta_y.abs, 1].minmax == [0, 1]
+      [0, delta.x.abs, delta.y.abs, 1].minmax == [0, 1]
     end
 
     def diagonal?
-      (delta_x.abs == delta_y.abs) && move.free_corridor?
+      (delta.x.abs == delta.y.abs) && move.free_corridor?
     end
 
     def along_axes?
-      (delta_x.zero? || delta_y.zero?) && move.free_corridor?
+      (delta.x.zero? || delta.y.zero?) && move.free_corridor?
     end
   end
 
@@ -41,16 +41,8 @@ module Moves
       valid_move?
     end
 
-    def first_occupied_tile
-      move.destination_tile
-    end
-
-    def delta_x
-      move.delta_coordinates.x
-    end
-
-    def delta_y
-      move.delta_coordinates.y
+    def delta
+      move.delta_coordinates
     end
   end
 
@@ -64,11 +56,11 @@ module Moves
     private
 
     def valid_move?
-      delta_x.zero? && delta_y.abs == 1
+      delta.x.zero? && delta.y.abs == 1
     end
 
     def valid_attack?
-      delta_x.abs == 1 && delta_y.abs == 1
+      delta.x.abs == 1 && delta.y.abs == 1
     end
   end
 
@@ -86,7 +78,7 @@ module Moves
     private
 
     def valid_move?
-      [delta_x.abs, delta_y.abs].sort == [1, 2]
+      [delta.x.abs, delta.y.abs].sort == [1, 2]
     end
   end
 

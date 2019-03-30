@@ -9,7 +9,7 @@ it's a good expression of my current (2019) modelling skills using
 Object Oriented languages.
 
 There is no frontend, the specs are the only consumers.
-Take a peek starting at `spec/game_spec.rb:40`.
+Take a peek starting at `spec/game_spec.rb:40` and follow the code along.
 
 Feel free to contact me for design questions or lessons.
 

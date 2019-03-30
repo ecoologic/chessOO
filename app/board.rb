@@ -12,7 +12,7 @@ class Board
       [_, _, _, _, _, _, _, _].each_with_index.map { |pc, x| tile_for([x, 2], pc) },
       [p, p, p, p, p, p, p, p].each_with_index.map { |pc, x| tile_for([x, 1], pc) },
       [t, n, b, q, k, b, n, t].each_with_index.map { |pc, x| tile_for([x, 0], pc) },
-    ].reverse #                - White
+    ].reverse # D  E  F  G  H  - White (after reverse)
   end
 
   def self.tile_for(coordinates, piece_class)

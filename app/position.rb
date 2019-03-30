@@ -15,16 +15,13 @@ class Position
       result[1..result.length - 2] # Exclude start and destination
     end
 
-    # TODO: +1 below...
+    # TODO: +1 below belongs in position
     def all_between_along_axes
       if position_a.letter == position_b.letter
         # Loop numbers
         result = y_range.map { |path_y| Position.new("#{position_a.letter}#{path_y + 1}") }
         result[1..result.length - 2] # Exclude start and destination
-      else
-        # Loop letters
-        x_range = Range.new(*[position_a.x, position_b.x].sort)
-        # TODO:
+      else # TODO: Loop letters
         [Position.new('E1')]
       end
     end

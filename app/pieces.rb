@@ -13,6 +13,7 @@ module Pieces
   end
 
   class Pawn < Abstract; end
+  # TODO: Rook
   class Tower < Abstract; end
   class Knight < Abstract; end
   class Bishop < Abstract; end
