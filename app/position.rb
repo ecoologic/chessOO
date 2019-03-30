@@ -1,49 +1,54 @@
 # Wraps the info 'A1' to provides helper methods
 # like coordinates [x, y], distances etc
 class Position
+  # Math between two positions
   class Delta
     def initialize(position_a, position_b)
       @position_a, @position_b = position_a, position_b
     end
 
-    # TODO: all_along_diagonal
-    def all_between_diagonal
-      result = x_range.zip(y_range).map do |x, y|
-        Position.from_coordinates([x, y])
-      end
-
-      result[1..result.length - 2] # Exclude start and destination
-    end
-
-    # TODO: +1 below belongs in position
-    def all_between_along_axes
-      if position_a.letter == position_b.letter
-        # Loop numbers
-        result = y_range.map { |path_y| Position.new("#{position_a.letter}#{path_y + 1}") }
-        result[1..result.length - 2] # Exclude start and destination
-      else # TODO: Loop letters
-        [Position.new('E1')]
-      end
+    def position
+      Position.from_coordinates([delta_x, delta_y])
     end
 
     def all_between
-      if delta.x.zero? || delta.y.zero?
-        all_between_along_axes
-      else
-        all_between_diagonal
-      end
-    end
+      positions =
+        if delta_x.zero? || delta_y.zero?
+          all_along_axes
+        else # TODO: ensure 45 degree
+          all_along_diagonal
+        end
 
-    def delta
-      delta_x = position_b.x - position_a.x
-      delta_y = position_b.y - position_a.y
-
-      Position.from_coordinates([delta_x, delta_y])
+      reject_first_and_last(positions) # Exclude start and destination
     end
 
     private
 
     attr_reader :position_a, :position_b
+
+    def delta_x
+      position_b.x - position_a.x
+    end
+
+    def delta_y
+      position_b.y - position_a.y
+    end
+
+    def all_along_diagonal
+      x_range.zip(y_range).map do |x, y|
+        Position.from_coordinates([x, y])
+      end
+    end
+
+    def all_along_axes
+      if position_a.letter == position_b.letter
+        y_range.map do |path_y|
+          Position.from_coordinates([position_a.x, path_y])
+        end
+      else
+        [Position.new('E1')] # TODO: Loop letters
+      end
+    end
 
     def x_range
       Range.new(*[position_a.x, position_b.x].sort)
@@ -51,6 +56,10 @@ class Position
 
     def y_range
       Range.new(*[position_a.y, position_b.y].sort)
+    end
+
+    def reject_first_and_last(positions)
+      positions[1..positions.length - 2]
     end
   end
 
@@ -84,23 +93,6 @@ class Position
 
   def number
     y + 1
-  end
-
-  # TODO: delete
-  def all_between_diagonal(destination_position)
-    Delta.new(self, destination_position).all_between_diagonal
-  end
-
-  def all_between_along_axes(destination_position)
-    Delta.new(self, destination_position).all_between_along_axes
-  end
-
-  def all_between(destination_position)
-    Delta.new(self, destination_position).all_between
-  end
-
-  def delta(destination_position)
-    Delta.new(self, destination_position).delta
   end
 
   private

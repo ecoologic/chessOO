@@ -23,11 +23,11 @@ class Move
   end
 
   def delta_coordinates
-    start_tile.position.delta(destination_tile.position)
+    Position::Delta.new(start_tile.position, destination_tile.position).position
   end
 
   def free_corridor?
-    positions = start_tile.position.all_between(destination_tile.position)
+    positions = Position::Delta.new(start_tile.position, destination_tile.position).all_between
     positions.select { |p| board.tile_at(p.to_s).occupied? }.empty?
   end
 

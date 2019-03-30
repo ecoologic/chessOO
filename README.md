@@ -24,7 +24,7 @@ puts Board.new
 | .3 __ __ __ __ __ __ __ __ 3. |
 | .2 Pa Pa Pa Pa Pa Pa Pa Pa 2. |
 | .1 Pa Kn Bi Pa Ki Bi Kn Pa 1. |
-   .A .B .C .D .E .F .G .H
+     .A .B .C .D .E .F .G .H
 ```
 
 
@@ -129,7 +129,7 @@ bin/guard
 * Invert dependency direction `Title -> Board`
 * Rename `Game -> Turn`
 * Move returning `destination_position`
-* Reply to https://codereview.stackexchange.com/questions/116994/object-oriented-chess-game-in-ruby
+* Engage [here](https://codereview.stackexchange.com/questions/116994/object-oriented-chess-game-in-ruby)
 
 
 ## Closing

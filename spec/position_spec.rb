@@ -8,11 +8,13 @@ RSpec.describe Position do
       expect(described_class.from_coordinates([7, 7]).to_s).to eq 'H8'
     end
   end
+end
 
+RSpec.describe Position::Delta do
   describe '#all_between' do
     it "sees G7 from B2" do
-      expect(described_class.new('B2').all_between(described_class.new('G7')))
-        .to eq %w[C3 D4 E5 F6].map { |p| described_class.new(p) }
+      expect(described_class.new(Position.new('B2'), Position.new('G7')).all_between)
+        .to eq %w[C3 D4 E5 F6].map { |p| Position.new(p) }
     end
   end
 end
