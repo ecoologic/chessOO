@@ -20,7 +20,6 @@ class Game
   end
 
   def on?
-    # puts board
     board.pieces_by_class(Pieces::King).count == 2
   end
 

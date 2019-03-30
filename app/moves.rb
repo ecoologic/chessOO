@@ -110,7 +110,7 @@ module Moves
     private
 
     def valid_move?
-      one_step?
+      along_axes? || diagonal?
     end
   end
 

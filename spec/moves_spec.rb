@@ -53,8 +53,8 @@ RSpec.describe Moves::Queen do
       expect(described_class.new(valid_move)).to be_valid
     end
 
-    it "is false when moved 2 ahead" do
-      expect(described_class.new(invalid_move)).not_to be_valid
+    it "is true when moved 2 ahead" do
+      expect(described_class.new(invalid_move)).to be_valid
     end
   end
 end
