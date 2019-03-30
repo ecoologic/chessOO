@@ -1,14 +1,14 @@
 require 'spec_helper'
 
 RSpec.describe Move do
+  include_examples :lets
+
   subject(:move) { described_class.new(start_tile, destination_tile) }
 
-  let(:start_tile) { Tile.new('B2', start_piece) }
-  let(:start_piece) { Pieces::Pawn.new }
+  let(:start_position_value) { 'B2' }
 
   describe '#call' do
-    let(:destination_tile) { Tile.new('E9', destination_piece) }
-    let(:destination_piece) { Pieces::Null.new }
+    let(:destination_position_value) { 'E9' }
 
     # TODO? rename start -> beginning
     it "is standing when the start is the destination" do
@@ -17,20 +17,6 @@ RSpec.describe Move do
 
     it "is NOT standing when the start is the destination" do
       expect(described_class.new(start_tile, destination_tile)).not_to be_standing
-    end
-
-    context "a pawn moving off the board" do
-      let(:start_tile) { Tile.new('E8', start_piece) }
-      let(:destination_tile) { Tile.new('E9', destination_piece) }
-      let(:destination_piece) { Pieces::Null.new }
-
-      it "can't move" do
-        ok = move.call
-
-        expect(ok).to be_falsey
-        expect(start_tile).to be_occupied
-        expect(start_tile.piece).to eq start_piece
-      end
     end
 
     context "a pawn attacking right" do

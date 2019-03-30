@@ -23,13 +23,6 @@ class Board
     Tile.new(position_value, piece)
   end
 
-  # TODO: instance method relative to board size
-  def self.include?(tile)
-    # TODO: tile.position.included?(board.max_coordinates)
-    ('A'..'G').to_a.include?(tile.position.letter) &&
-      (1..8).to_a.include?(tile.position.number)
-  end
-
   def initialize(matrix = self.class.initial_disposition)
     @matrix = matrix
   end
@@ -43,9 +36,10 @@ class Board
   # | .3 __ __ __ __ __ __ __ __ 3. |
   # | .2 Pa Pa Pa Pa Pa Pa Pa Pa 2. |
   # | .1 Pa Kn Bi Pa Ki Bi Kn Pa 1. |
+  #      .A .B .C .D .E .F .G .H
   def to_s
     result = matrix.each_with_index.map do |row, y|
-      center = row.map { |t| t.piece.class.to_sym }.join(" ")
+      center = row.map { |t| t.piece.to_sym }.join(" ")
       "| .#{y + 1} #{center} #{y + 1}. |"
     end.reverse.join("\n")
 
@@ -56,7 +50,17 @@ class Board
     ].compact.join("\n")
   end
 
-  # TODO? move in Tile?
+  def inspect
+    "#<#{matrix}>"
+  end
+
+  def include?(position_value)
+    position = Position.new(position_value)
+
+    position.x <= last_position.x &&
+      position.y <= last_position.y
+  end
+
   def tile_at(position_value)
     x, y = Position.new(position_value).coordinates
     row = matrix[y]
@@ -69,9 +73,13 @@ class Board
       .flatten
       .select { |tile| tile.piece.class == piece_class }
   end
-  
+
   private
 
   # NOTE: Access is matrix[y][x] (first access the row)
   attr_reader :matrix
+
+  def last_position
+    matrix.last.last.position
+  end
 end

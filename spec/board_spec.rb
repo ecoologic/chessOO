@@ -1,11 +1,13 @@
 require 'spec_helper'
 
 RSpec.describe Board do
+  include_examples :lets
+
   subject(:board) { described_class.new }
 
   describe '.initial_disposition' do
-    let(:disposition) { described_class.initial_disposition }
     let(:last_tile) { disposition.last.last }
+
     let :first_row do
       [
         Pieces::Tower,
@@ -43,6 +45,29 @@ RSpec.describe Board do
       expect(disposition[3].map { |c| c.piece.class }.uniq).to eq [Pieces::Null]
       expect(disposition[4].map { |c| c.piece.class }.uniq).to eq [Pieces::Null]
       expect(disposition[5].map { |c| c.piece.class }.uniq).to eq [Pieces::Null]
+    end
+  end
+
+  describe '#include?' do
+    example_group :lets
+
+    let(:a1) { Tile.new('A1') }
+    let(:a2) { Tile.new('A2') }
+    let(:b1) { Tile.new('B1') }
+    let(:b2) { Tile.new('B2') }
+
+    it "is true only for the position values of the row (x, letters)" do
+      expect(row_board.include?('A1')).to be true
+      expect(row_board.include?('A2')).to be false
+      expect(row_board.include?('B1')).to be true
+      expect(row_board.include?('B2')).to be false
+    end
+
+    it "is true only for the position values of the column (y, numbers)" do
+      expect(column_board.include?('A1')).to be true
+      expect(column_board.include?('A2')).to be true
+      expect(column_board.include?('B1')).to be false
+      expect(column_board.include?('B2')).to be false
     end
   end
 

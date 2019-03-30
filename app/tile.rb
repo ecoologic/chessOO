@@ -10,6 +10,10 @@ class Tile
   attr_reader :position, :position_value
   attr_accessor :piece
 
+  def inspect
+    "#<#{position_value}:#{piece.to_sym}>"
+  end
+
   def ==(other_tile)
     position == other_tile.position
   end

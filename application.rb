@@ -1,4 +1,5 @@
 require_relative 'app/board'
+require_relative 'app/board_move'
 require_relative 'app/game'
 require_relative 'app/move'
 require_relative 'app/moves'

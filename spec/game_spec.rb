@@ -1,26 +1,36 @@
 require 'spec_helper'
 
 RSpec.describe Game do
+  include_examples :lets
+
   subject(:game) { described_class.new(board) }
 
-  let(:board) { Board.new }
-
   describe '#move' do
-    let!(:start_piece) { board.tile_at(start_position).piece }
+    let!(:start_piece) { board.tile_at(start_position_value).piece }
 
-    let(:start_position) { 'G2' }
-    let(:destination_position) { 'G3' }
+    let(:start_position_value) { 'G2' }
+    let(:destination_position_value) { 'G3' }
+
+    it "doesn't move off the board" do
+      expect(game.move('E8', 'E9')).to be_nil
+    end
+
+    it "doesn't move when the game is over" do
+      game.send(:board).tile_at('E1').piece = Pieces::Null
+
+      expect(game.move('A1', 'A2')).to be_nil
+    end
 
     it "raises an error if you try to move an empty piece" do
       expect { game.move('E5', 'E6') }.to raise_error(RuntimeError)
     end
 
     it "moves the piece on the board" do
-      ok = game.move(start_position, destination_position)
+      ok = game.move(start_position_value, destination_position_value)
 
       expect(ok).not_to be_nil
-      expect(board.tile_at(start_position)).not_to be_occupied
-      expect(board.tile_at(destination_position).piece).to eq start_piece
+      expect(board.tile_at(start_position_value)).not_to be_occupied
+      expect(board.tile_at(destination_position_value).piece).to eq start_piece
     end
 
     it "takes the pawn to kill the king" do

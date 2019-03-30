@@ -23,8 +23,9 @@ module Moves
       @move = move
     end
 
+    # TODO: move in BoardMove?
     def call
-      if move.standing? || !move.in_board?
+      if move.standing?
         false
       elsif move.destination_tile.occupied?
         valid_attack?

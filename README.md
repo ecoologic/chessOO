@@ -45,6 +45,7 @@ title Chesso
 
 participant Game
 participant MOVING_RULES
+participant BoardMove
 participant Moves
 participant Move
 participant Board
@@ -52,17 +53,18 @@ participant Tile
 participant Pieces
 participant Position
 
-Game->Move:
-Game->Board:
+Game->BoardMove:
 Game->Pieces:
 
 MOVING_RULES->Moves:
 MOVING_RULES->Pieces:
 
+BoardMove->Board:
+BoardMove->Move:
+
 Moves->Move:
 Moves->Tile:
 
-Move->Board:
 Move->Tile:
 Move->Pieces:
 Move->Position:
@@ -95,12 +97,24 @@ bin/guard
 
 **NOTE:** Use `puts board` to ease the debug.
 
-### TODOs
+### Chess TODOs
 
+* COLORS!!
+* Bishop/Tower corridor check
+* Castelling
+* Pawns enpassant
+* Pawn enpassant kill
+* Pawn promotion
+* Pawn opening of 2
+* King available moves
+* Draw rules
+
+### Tech TODOs
+
+* Inject a board instance instead of relying on Board
 * Rcov?
 * (?) Invert dependency direction Title -> Board
-* Inject a board instance instead of relying on Board
-
+* (?) Rename Game -> Turn
 
 ## Closing
 

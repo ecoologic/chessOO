@@ -11,6 +11,14 @@ module Pieces
 
     attr_reader :description
 
+    def inspect
+      %(#<#{to_sym}:piece_start=#{description}>)
+    end
+
+    def to_sym
+      self.class.to_sym
+    end
+
     def present?
       true
     end

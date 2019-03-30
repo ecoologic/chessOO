@@ -1,5 +1,5 @@
 # Executes one valid move or attack within the rules of the game
-# Move -> [Board, Tile, Pieces, Position]
+# Move -> [Tile, Pieces, Position]
 class Move
   def initialize(start_tile, destination_tile)
     @start_tile, @destination_tile = start_tile, destination_tile
@@ -9,8 +9,11 @@ class Move
 
   attr_reader :start_tile, :destination_tile, :moving_piece
 
+  def inspect
+    "#<Move:#{start_tile.position}-#{destination_tile.position}>"
+  end
+
   # NOTE: Mutates the states of tiles at runtime, not idempotent method
-  # TODO: check Game.on?
   def call
     return unless can_move?
 
@@ -20,10 +23,6 @@ class Move
 
   def standing?
     start_tile == destination_tile
-  end
-
-  def in_board?
-    Board.include?(destination_tile)
   end
 
   def delta_coordinates

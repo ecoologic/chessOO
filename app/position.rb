@@ -17,7 +17,7 @@ class Position
   attr_reader :x, :y
 
   def inspect
-    to_s
+    "#<#{to_s}>"
   end
 
   def to_s
