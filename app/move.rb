@@ -15,7 +15,7 @@ class Move
 
   # NOTE: Mutates the states of tiles at runtime, not idempotent method
   def call
-    return unless can_move?
+    return unless valid?
 
     start_tile.piece = Pieces::Null.new
     destination_tile.piece = moving_piece
@@ -31,7 +31,7 @@ class Move
 
   private
 
-  def can_move?
-    MOVING_RULES[moving_piece.class].new(self).call
+  def valid?
+    MOVING_RULES[moving_piece.class].new(self).valid?
   end
 end

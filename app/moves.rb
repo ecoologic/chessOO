@@ -1,9 +1,7 @@
 # Moves -> [Move, Tile]
 module Moves
-  # TODO: Any better than a module? (methods are shared)
   module Common
-    # TODO: rename of_one?
-    def move_of_one?
+    def one_step?
       [0, delta_x.abs, delta_y.abs, 1].minmax == [0, 1]
     end
 
@@ -23,8 +21,7 @@ module Moves
       @move = move
     end
 
-    # TODO: move in BoardMove?
-    def call
+    def valid?
       if move.standing?
         false
       elsif move.destination_tile.occupied?
@@ -50,7 +47,6 @@ module Moves
       move.destination_tile # FIXME: requires board instance var
     end
 
-    # TODO: delta_coordinates
     def delta_x
       move.delta_coordinates.x
     end
@@ -66,9 +62,9 @@ module Moves
   end
 
   # NOTE: position.abs -> workaround while we don't have black/white player
-  # # TODO: make valid_move? private for all
-  # TODO? rename valid?
   class Pawn < Moves::Abstract
+    private
+
     def valid_move?
       delta_x.zero? && delta_y.abs == 1
     end
@@ -81,12 +77,16 @@ module Moves
   class Moves::Tower < Moves::Abstract
     include Common
 
+    private
+
     def valid_move?
       along_axes?
     end
   end
 
   class Knight < Moves::Abstract
+    private
+
     def valid_move?
       [delta_x.abs, delta_y.abs].sort == [1, 2]
     end
@@ -94,6 +94,8 @@ module Moves
 
   class Bishop < Moves::Abstract
     include Common
+
+    private
 
     def valid_move?
       diagonal?
@@ -103,16 +105,20 @@ module Moves
   class Moves::Queen < Moves::Abstract
     include Common
 
+    private
+
     def valid_move?
-      move_of_one?
+      one_step?
     end
   end
 
   class Moves::King < Moves::Abstract
     include Common
 
+    private
+
     def valid_move?
-      move_of_one?
+      one_step?
     end
   end
 end

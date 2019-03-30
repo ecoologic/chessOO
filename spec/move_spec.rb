@@ -6,11 +6,9 @@ RSpec.describe Move do
   subject(:move) { described_class.new(start_tile, destination_tile) }
 
   let(:start_position_value) { 'B2' }
+  let(:destination_position_value) { 'E9' }
 
-  describe '#call' do
-    let(:destination_position_value) { 'E9' }
-
-    # TODO? rename start -> beginning
+  describe '#standing?' do
     it "is standing when the start is the destination" do
       expect(described_class.new(start_tile, start_tile)).to be_standing
     end
@@ -18,7 +16,9 @@ RSpec.describe Move do
     it "is NOT standing when the start is the destination" do
       expect(described_class.new(start_tile, destination_tile)).not_to be_standing
     end
-
+  end
+  
+  describe '#call' do
     context "a pawn attacking right" do
       let(:destination_tile) { Tile.new('C3', destination_piece) }
 

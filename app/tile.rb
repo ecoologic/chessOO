@@ -3,7 +3,7 @@
 class Tile
   def initialize(position_value, piece = Pieces::Null.new)
     @position = Position.new(position_value)
-    @position_value = position_value # TODO: remove in tests
+    @position_value = position_value # TODO: Only used for tests, make private
     @piece = piece
   end
 

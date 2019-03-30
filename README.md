@@ -111,10 +111,16 @@ bin/guard
 
 ### Tech TODOs
 
-* Inject a board instance instead of relying on Board
 * Rcov?
-* (?) Invert dependency direction Title -> Board
-* (?) Rename Game -> Turn
+* `Moves::Queen` etc, make `Common` private
+
+#### Maybes
+
+* Change signature `Tile.new(position, piece)`
+* Rename `start -> beginning` or `initial, final`, or...
+* Invert dependency direction `Title -> Board`
+* Rename `Game -> Turn`
+
 
 ## Closing
 

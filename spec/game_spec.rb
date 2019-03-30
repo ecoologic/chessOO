@@ -40,7 +40,7 @@ RSpec.describe Game do
       expect(game.move('C6', 'C5')).not_to be_nil
       expect(game.move('C5', 'C4')).not_to be_nil
       expect(game.move('C4', 'C3')).not_to be_nil
-      expect(game.move('C3', 'D2')).not_to be_nil # Eat the pawn # TODO: not happening
+      expect(game.move('C3', 'D2')).not_to be_nil
       expect(game).to be_on
       expect(game.move('D2', 'E1')).not_to be_nil # Kill the king
       expect(game).not_to be_on
@@ -66,7 +66,6 @@ RSpec.describe Game do
       expect(game.move('G2', 'G3')).to be_truthy # Move the white pawn
       expect(game.move('F1', 'G2')).to be_truthy # Move the white bishop
       expect(game.move('G2', 'C6')).to be_truthy # Move the bishop again
-      # TODO: expect(game.move('C6', 'E8')).to be_falsey # Attack the black King, Pawn in the way
 
       expect(game.move('D7', 'D6')).to be_truthy # Move the black pawn away
       expect(game).to be_on

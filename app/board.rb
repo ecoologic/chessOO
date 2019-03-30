@@ -1,4 +1,4 @@
-# Board -> [Tile, Pieces]
+# Board -> [Tile, Position, Pieces]
 class Board
   def self.initial_disposition
     _, p = Pieces::Null, Pieces::Pawn
@@ -15,7 +15,6 @@ class Board
     ].reverse #                - White
   end
 
-  # TODO? move to Tile.new ?
   def self.tile_for(coordinates, piece_class)
     position_value = Position.from_coordinates(coordinates).to_s
     piece = piece_class.new(position_value)
