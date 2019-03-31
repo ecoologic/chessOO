@@ -12,7 +12,7 @@ class Game
 
     start_tile = board.tile_at(start_position_value)
     destination_tile = board.tile_at(destination_position_value)
-    move = Move.new(board, start_tile, destination_tile)
+    move = Hand.new(Move.new(board, start_tile, destination_tile)) # TODO: 
 
     move.call
   end

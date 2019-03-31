@@ -4,28 +4,20 @@
 # Move->Pieces:
 # Move->Position:
 class Move
+  # TODO: take positions, not tiles
   def initialize(board, start_tile, destination_tile)
     @board = board
     @start_tile, @destination_tile = start_tile, destination_tile
-    @moving_piece = start_tile.piece
     raise RuntimeError, "Can't move an empty tile" unless start_tile.occupied?
   end
 
   attr_reader :start_tile, :destination_tile, :moving_piece
 
-  # NOTE: Mutates the states of tiles at runtime, not idempotent method
-  def call
-    return unless valid?
-
-    start_tile.piece = Pieces::Null.new
-    destination_tile.piece = moving_piece
-  end
-
   def standing?
     start_tile == destination_tile
   end
 
-  def delta_coordinates
+  def delta_position
     Position::Delta.new(start_tile.position, destination_tile.position).position
   end
 
@@ -37,8 +29,16 @@ class Move
   private
 
   attr_reader :board
-
-  def valid?
-    MOVING_RULES[moving_piece.class].new(self).valid?
-  end
 end
+
+
+# TODO: extract these
+# Move->MOVING_RULES:
+# MOVING_RULES->Moves:
+# Moves->TileMove:
+# Move->TileMove:
+# or...
+# Hand->MOVING_RULES:
+# MOVING_RULES->Moves:
+# Moves->Move:
+

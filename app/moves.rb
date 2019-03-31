@@ -44,7 +44,7 @@ module Moves
     end
 
     def delta
-      move.delta_coordinates
+      move.delta_position
     end
   end
 
