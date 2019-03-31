@@ -10,14 +10,14 @@ RSpec.describe Board do
 
     let :first_row do
       [
-        Pieces::Tower,
+        Pieces::Rook,
         Pieces::Knight,
         Pieces::Bishop,
         Pieces::Queen,
         Pieces::King,
         Pieces::Bishop,
         Pieces::Knight,
-        Pieces::Tower
+        Pieces::Rook
       ]
     end
 

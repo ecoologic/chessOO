@@ -1,4 +1,6 @@
-# A Ruby Chess~ish Game
+# Chess0 - An Object-Oriented model of the Chess rules in Ruby
+
+Written for readability.
 
 Currently is doing all the basic moves, but no fancy ones like casteling.
 
@@ -43,10 +45,10 @@ because I like [sequencediagram.org](https://sequencediagram.org/)
 (thank you guys).
 
 Below is the list of dependencies of every model,
-use the website above for a nice graphic representation.
+[here is a nice graphic representation](https://sequencediagram.org/index.html#initialData=C4S2BsFMAIGEAtIGckHkBQ6AOBDATqAMYi4B2w0A4jgLaTb5Ek7nQCyqAagJIBylAfQBKAVQAyAUQDKDAiGJkKAIQD2+ACZsVAN3q45ClhS26kspovY69jec1aqN5u5YAqIKM8OsACiEiEyF72FD4qSGAgKqSY1HQAtAB8jnjqAFzocZBJfgHIGegcPPzC4tJJJvmFXHyCopJSOf6BSAWF1kgV1hmVnYnuUD0dOeGR0QWVSSnp7bpJA5BDc4m5LUvZK6Og45jT8x6L6HsrzVVHaqkjEdukGQtNea3o95vXUbfoQA).
 
 ```
-title Chesso
+title ChessO
 
 participant Game
 participant MOVING_RULES
@@ -58,18 +60,17 @@ participant Tile
 participant Pieces
 participant Position
 
-Game->BoardMove:
+Game->Board:
 Game->Pieces:
 
 MOVING_RULES->Moves:
 MOVING_RULES->Pieces:
 
-BoardMove->Board:
-BoardMove->Move:
-
 Moves->Move:
 Moves->Tile:
+Moves->Position:
 
+Move->Board:
 Move->Tile:
 Move->Pieces:
 Move->Position:
@@ -77,8 +78,12 @@ Move->Position:
 Board->Tile:
 Board->Pieces:
 
+Board->Position:
 Tile->Pieces:
 Tile->Position:
+
+# TODO
+Move->MOVING_RULES:
 ```
 
 
@@ -115,8 +120,7 @@ bin/guard
 
 ### Tech TODOs
 
-* Consolidate `Position::Delta`
-* Rename `MOVING_RULES`
+* Fix and rename `MOVING_RULES`
 * Update diagram
 * Rcov?
 * Review private methods

@@ -1,5 +1,6 @@
-# Tile -> [Pieces, Position]
 # Each cell of the board, binds the piece to its position
+# Tile->Pieces:
+# Tile->Position:
 # NOTE: mutable object
 class Tile
   def initialize(position_value, piece = Pieces::Null.new)

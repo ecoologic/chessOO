@@ -1,4 +1,6 @@
-# Moves -> [Move, Tile]
+# Moves->Move:
+# Moves->Tile:
+# Moves->Position:
 module Moves
   module Common
     def one_step?
@@ -64,7 +66,7 @@ module Moves
     end
   end
 
-  class Moves::Tower < Moves::Abstract
+  class Moves::Rook < Moves::Abstract
     include Common
 
     private

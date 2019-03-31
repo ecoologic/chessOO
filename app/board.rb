@@ -1,8 +1,10 @@
-# Board -> [Tile, Position, Pieces]
+# Board->Tile:
+# Board->Position:
+# Board->Pieces:
 class Board
   def self.initial_disposition
     _, p = Pieces::Null, Pieces::Pawn
-    t, n, b, q, k = Pieces::Tower, Pieces::Knight, Pieces::Bishop, Pieces::Queen, Pieces::King
+    t, n, b, q, k = Pieces::Rook, Pieces::Knight, Pieces::Bishop, Pieces::Queen, Pieces::King
     [ # A B  C  D  E  F  G  H  - Black
       [t, n, b, q, k, b, n, t].each_with_index.map { |pc, x| tile_for([x, 7], pc) },
       [p, p, p, p, p, p, p, p].each_with_index.map { |pc, x| tile_for([x, 6], pc) },

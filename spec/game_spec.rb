@@ -11,8 +11,8 @@ RSpec.describe Game do
     let(:start_position_value) { 'G2' }
     let(:destination_position_value) { 'G3' }
 
-    it "can't move a tower beyond another piece" do
-      expect(game.move('A1', 'A5')).to be_falsey # There's a Pawn in front of the Tower
+    it "can't move a rook beyond another piece" do
+      expect(game.move('A1', 'A5')).to be_falsey # There's a Pawn in front of the Rook
     end
 
     it "doesn't move off the board" do

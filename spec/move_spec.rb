@@ -9,7 +9,7 @@ RSpec.describe Move do
   let(:destination_position_value) { 'E9' }
 
   describe '#free_corridor?' do
-    it "is true when no other piece is on the way (tower)" do
+    it "is true when no other piece is on the way (rook)" do
       expect(described_class.new(board, board.tile_at('A1'), board.tile_at('A2'))).to be_truthy
 
       move = described_class.new(board, board.tile_at('A2'), board.tile_at('A7'))
@@ -17,7 +17,7 @@ RSpec.describe Move do
       expect(move).to be_free_corridor
     end
 
-    it "is false when another piece is on the way (tower)" do
+    it "is false when another piece is on the way (rook)" do
       move = described_class.new(board, board.tile_at('A1'), board.tile_at('A5'))
 
       expect(move).not_to be_free_corridor
@@ -46,7 +46,7 @@ RSpec.describe Move do
       expect(described_class.new(board, start_tile, destination_tile)).not_to be_standing
     end
   end
-  
+
   describe '#call' do
     context "a pawn attacking right" do
       let(:destination_tile) { Tile.new('C3', destination_piece) }

@@ -1,4 +1,4 @@
-# Pieces -> [Piece]
+# No dependencies
 module Pieces
   class Abstract
     def initialize(description = object_id)
@@ -13,8 +13,7 @@ module Pieces
   end
 
   class Pawn < Abstract; end
-  # TODO: Rook
-  class Tower < Abstract; end
+  class Rook < Abstract; end
   class Knight < Abstract; end
   class Bishop < Abstract; end
   class Queen < Abstract; end

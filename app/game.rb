@@ -1,10 +1,11 @@
-# Game -> [BoardMove, Pieces]
+# Game->Board:
+# Game->Pieces:
 class Game
   def initialize(board = Board.new)
     @board = board
   end
 
-  # Game.new.move('E2', 'E3')
+  # Game.new.move('E2', 'E3') # Moves the white pawn
   def move(start_position_value, destination_position_value)
     return unless on?
     return unless board.include?(destination_position_value)

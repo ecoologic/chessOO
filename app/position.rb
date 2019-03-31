@@ -1,5 +1,6 @@
 # Wraps the info 'A1' to provides helper methods
 # like coordinates [x, y], distances etc
+# No dependencies
 class Position
   # Math between two positions
   class Delta

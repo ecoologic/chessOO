@@ -1,6 +1,6 @@
 require_relative 'spec_helper'
 
-RSpec.describe Moves::Tower do
+RSpec.describe Moves::Rook do
   include_examples :lets
 
   let(:start_tile) { board.tile_at('A1') }
