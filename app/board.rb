@@ -3,25 +3,29 @@
 # Board->Pieces:
 class Board
   def self.initial_disposition
-    _, p = Pieces::Null, Pieces::Pawn
-    t, n, b, q, k = Pieces::Rook, Pieces::Knight, Pieces::Bishop, Pieces::Queen, Pieces::King
-    [ # A B  C  D  E  F  G  H  - Black
-      [t, n, b, q, k, b, n, t].each_with_index.map { |pc, x| tile_for([x, 7], pc) },
-      [p, p, p, p, p, p, p, p].each_with_index.map { |pc, x| tile_for([x, 6], pc) },
-      [_, _, _, _, _, _, _, _].each_with_index.map { |pc, x| tile_for([x, 5], pc) },
-      [_, _, _, _, _, _, _, _].each_with_index.map { |pc, x| tile_for([x, 4], pc) },
-      [_, _, _, _, _, _, _, _].each_with_index.map { |pc, x| tile_for([x, 3], pc) },
-      [_, _, _, _, _, _, _, _].each_with_index.map { |pc, x| tile_for([x, 2], pc) },
-      [p, p, p, p, p, p, p, p].each_with_index.map { |pc, x| tile_for([x, 1], pc) },
-      [t, n, b, q, k, b, n, t].each_with_index.map { |pc, x| tile_for([x, 0], pc) },
-    ].reverse # D  E  F  G  H  - White (after reverse)
+    __, pa = Pieces::Null, Pieces::Pawn
+    ro, kn, bi = Pieces::Rook, Pieces::Knight, Pieces::Bishop
+    qu, ki = Pieces::Queen, Pieces::King
+
+    [ #              A   B   C   D   E   F   G   H  - Black
+      new_row([ro, kn, bi, qu, ki, bi, kn, ro], y: 7), # 8
+      new_row([pa, pa, pa, pa, pa, pa, pa, pa], y: 6), # 7
+      new_row([__, __, __, __, __, __, __, __], y: 5), # 6
+      new_row([__, __, __, __, __, __, __, __], y: 4), # 5
+      new_row([__, __, __, __, __, __, __, __], y: 3), # 4
+      new_row([__, __, __, __, __, __, __, __], y: 2), # 3
+      new_row([pa, pa, pa, pa, pa, pa, pa, pa], y: 1), # 2
+      new_row([ro, kn, bi, qu, ki, bi, kn, ro], y: 0)  # 1
+    ].reverse #      A   B   C   D   E   F   G   H  - White (after reverse)
   end
 
-  def self.tile_for(coordinates, piece_class)
-    position_value = Position.from_coordinates(coordinates).to_s
-    piece = piece_class.new(position_value)
+  def self.new_row(pieces, y:)
+    pieces.each_with_index.map do |piece_class, x|
+      position_value = Position.from_coordinates([x, y]).to_s
+      piece = piece_class.new(position_value)
 
-    Tile.new(position_value, piece)
+      Tile.new(position_value, piece)
+    end
   end
 
   def initialize(matrix = self.class.initial_disposition)
