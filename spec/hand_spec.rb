@@ -2,64 +2,69 @@ require 'spec_helper'
 RSpec.describe Hand do
   include_examples :lets
 
-  subject(:hand) { described_class.new(Move.new(board, start_tile, destination_tile)) }
+  subject :hand do
+    described_class.new(Move.new(board,
+                                 start_position_value,
+                                 destination_position_value))
+  end
 
   let(:start_position_value) { 'B2' }
   let(:destination_position_value) { 'E9' }
+  let!(:start_piece) { board.tile_at(start_position_value).piece }
 
   describe '#call' do
     context "a pawn attacking right" do
-      let(:destination_tile) { Tile.new('C3', destination_piece) }
+      let(:destination_position_value) { 'C3' }
 
       context "when the tile is empty" do
-        let(:destination_piece) { Pieces::Null.new }
-
         it "can't attack" do
+          board.tile_at(destination_position_value).piece = Pieces::Null.new
+
           ok = hand.call
 
           expect(ok).to be_falsey
-          expect(start_tile).to be_occupied
-          expect(destination_tile.piece).to eq destination_piece
+          expect(board.tile_at(start_position_value)).to be_occupied
+          expect(board.tile_at(destination_position_value).piece).to eq Pieces::Null.new
         end
       end
 
       context "when the tile is occupied" do
-        let(:destination_piece) { Pieces::King.new }
-
         it "eats the piece" do
+          board.tile_at(destination_position_value).piece = Pieces::King.new
+
           ok = hand.call
 
           expect(ok).to be_truthy
-          expect(start_tile).not_to be_occupied
-          expect(destination_tile.piece).to eq(start_piece)
+          expect(board.tile_at(start_position_value)).not_to be_occupied
+          expect(board.tile_at(destination_position_value).piece).to eq(start_piece)
         end
       end
     end
 
     context "a pawn moving one forward" do
-      let(:destination_tile) { Tile.new('B3', destination_piece) }
+      let(:destination_position_value) { 'B3' }
 
       context "when the tile is empty" do
         let(:destination_piece) { Pieces::Null.new }
 
-        it "can hand" do
+        it "can move" do
           ok = hand.call
 
           expect(ok).to be_truthy
-          expect(start_tile).not_to be_occupied
-          expect(destination_tile.piece).to eq(start_piece)
+          expect(board.tile_at(start_position_value)).not_to be_occupied
+          expect(board.tile_at(destination_position_value).piece).to eq(start_piece)
         end
       end
 
       context "when the tile is occupied" do
-        let(:destination_piece) { Pieces::Pawn.new }
+        it "can't move" do
+          board.tile_at(destination_position_value).piece = Pieces::Pawn.new
 
-        it "can't hand" do
           ok = hand.call
 
           expect(ok).to be_falsey
-          expect(start_tile.piece).to eq(start_piece)
-          expect(destination_tile).to be_occupied
+          expect(board.tile_at(start_position_value).piece).to eq(start_piece)
+          expect(board.tile_at(destination_position_value)).to be_occupied
         end
       end
     end

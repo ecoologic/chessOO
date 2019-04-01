@@ -8,13 +8,13 @@ class Game
   # Game.new.move('E2', 'E3') # Moves the white pawn
   def move(start_position_value, destination_position_value)
     return unless on?
-    return unless board.include?(destination_position_value)
+    return unless board.include?(destination_position_value) # TODO? in move
 
-    start_tile = board.tile_at(start_position_value)
-    destination_tile = board.tile_at(destination_position_value)
-    move = Hand.new(Move.new(board, start_tile, destination_tile)) # TODO: 
+    hand = Hand.new(Move.new(board,
+                             start_position_value,
+                             destination_position_value))
 
-    move.call
+    hand.call
   end
 
   def on?

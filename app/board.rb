@@ -19,8 +19,8 @@ class Board
     ].reverse #      A   B   C   D   E   F   G   H  - White (after reverse)
   end
 
-  def self.new_row(pieces, y:)
-    pieces.each_with_index.map do |piece_class, x|
+  def self.new_row(row, y:)
+    row.each_with_index.map do |piece_class, x|
       position_value = Position.from_coordinates([x, y]).to_s
       piece = piece_class.new(position_value)
 

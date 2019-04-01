@@ -9,6 +9,7 @@ class Hand
   end
 
   # NOTE: Mutates the states of tiles at runtime, not idempotent method
+  # # TODO? rename move
   def call
     return unless valid?
 

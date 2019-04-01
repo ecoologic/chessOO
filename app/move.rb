@@ -4,41 +4,37 @@
 # Move->Pieces:
 # Move->Position:
 class Move
-  # TODO: take positions, not tiles
-  def initialize(board, start_tile, destination_tile)
+  def initialize(board, start_position_value, destination_position_value)
     @board = board
-    @start_tile, @destination_tile = start_tile, destination_tile
+    @start_position = Position.new(start_position_value)
+    @destination_position = Position.new(destination_position_value)
     raise RuntimeError, "Can't move an empty tile" unless start_tile.occupied?
   end
 
-  attr_reader :start_tile, :destination_tile, :moving_piece
+  attr_reader :moving_piece # TODO: private
+
+  def start_tile
+    board.tile_at(start_position.to_s)
+  end
+
+  def destination_tile
+    board.tile_at(destination_position.to_s)
+  end
 
   def standing?
-    start_tile == destination_tile
+    start_position == destination_position
   end
 
   def delta_position
-    Position::Delta.new(start_tile.position, destination_tile.position).position
+    Position::Delta.new(start_position, destination_position).position
   end
 
   def free_corridor?
-    positions = Position::Delta.new(start_tile.position, destination_tile.position).all_between
+    positions = Position::Delta.new(start_position, destination_position).all_between
     positions.select { |p| board.tile_at(p.to_s).occupied? }.empty?
   end
 
   private
 
-  attr_reader :board
+  attr_reader :board, :start_position, :destination_position
 end
-
-
-# TODO: extract these
-# Move->MOVING_RULES:
-# MOVING_RULES->Moves:
-# Moves->TileMove:
-# Move->TileMove:
-# or...
-# Hand->MOVING_RULES:
-# MOVING_RULES->Moves:
-# Moves->Move:
-
