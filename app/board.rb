@@ -1,6 +1,6 @@
 # Board->Tile:
-# Board->Position:
 # Board->Pieces:
+# Board->Position:
 class Board
   def self.initial_disposition
     __, pa = Pieces::Null, Pieces::Pawn
@@ -16,7 +16,7 @@ class Board
       new_row([__, __, __, __, __, __, __, __], y: 2), # 3
       new_row([pa, pa, pa, pa, pa, pa, pa, pa], y: 1), # 2
       new_row([ro, kn, bi, qu, ki, bi, kn, ro], y: 0)  # 1
-    ].reverse #      A   B   C   D   E   F   G   H  - White (after reverse)
+    ].reverse #      A   B   C   D   E   F   G   H  - White
   end
 
   def self.new_row(row, y:)

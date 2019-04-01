@@ -64,6 +64,8 @@ class Position
     end
   end
 
+  ############################################################################
+
   def self.from_coordinates(coordinate_couple)
     x, y = coordinate_couple
     letter_x = ('A'.bytes.first + x).chr
@@ -78,6 +80,10 @@ class Position
   end
 
   attr_reader :x, :y
+
+  def to_s
+    "#{letter}#{number}"
+  end
 
   def ==(other_position)
     to_s == other_position.to_s

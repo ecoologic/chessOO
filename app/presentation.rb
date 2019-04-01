@@ -1,4 +1,6 @@
 class Game
+  def to_s; inspect; end
+
   def inspect
     "#<Game>"
   end
@@ -34,20 +36,30 @@ class Board
 end
 
 class Move
+  def to_s; inspect; end
+
   def inspect
     "#<Move:#{start_tile.position}-#{destination_tile.position}>"
   end
 end
 
 class Moves::Abstract
+  def to_s; inspect; end
+
   def inspect
     "#<#{self.class}:#{move.inspect}>"
   end
 end
 
-class Moves::Null
+class Pieces::Null
   def self.to_sym
-    '__'
+    '__'.to_sym
+  end
+
+  def to_s; inspect; end
+
+  def inspect
+    %(#<Pieces::Null>)
   end
 end
 
@@ -55,6 +67,8 @@ class Pieces::Abstract
   def self.to_sym
     to_s['Pieces::'.length, 2].to_sym
   end
+
+  def to_s; inspect; end
 
   def inspect
     %(#<#{self.class}:init-#{description}>)
@@ -66,8 +80,10 @@ class Pieces::Abstract
 end
 
 class Tile
+  def to_s; inspect; end
+
   def inspect
-    "#<Tile:#{position_value}:#{piece.to_sym}>"
+    "#<Tile:#{position.to_s}:#{piece.to_sym}>"
   end
 end
 
@@ -76,7 +92,5 @@ class Position
     "#<Position:#{to_s}>"
   end
 
-  def to_s
-    "#{letter}#{number}"
-  end
+  # to_s # Part of the logic
 end

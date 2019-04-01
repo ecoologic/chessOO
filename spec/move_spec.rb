@@ -3,7 +3,11 @@ require 'spec_helper'
 RSpec.describe Move do
   include_examples :lets
 
-  subject(:move) { described_class.new(board, start_position_value, destination_position_value) }
+  subject :move do
+    described_class.new(board,
+                        start_position_value,
+                        destination_position_value)
+  end
 
   let(:start_position_value) { 'B2' }
   let(:destination_position_value) { 'E9' }

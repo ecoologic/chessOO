@@ -56,8 +56,11 @@ RSpec.describe Moves::Queen do
       expect(described_class.new(valid_move)).to be_valid
     end
 
-    xit "is true when moved 2 ahead" do
-      expect(described_class.new(invalid_move)).to be_valid
+    it "is true when moved a few ahead" do
+      board.tile_at('E3').piece = Pieces::Queen.new
+      move = Move.new(board, 'E3', 'E7')
+
+      expect(described_class.new(move)).to be_valid
     end
   end
 end
