@@ -98,10 +98,4 @@ RSpec.describe Board do
       expect(board.pieces_by_class(Pieces::King).count).to be 1
     end
   end
-
-  describe '#to_s' do
-    it "is 11 lines long" do
-      expect(Board.new.to_s.lines.size).to eq 11
-    end
-  end
 end

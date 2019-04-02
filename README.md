@@ -121,7 +121,6 @@ bin/guard
 ### Tech TODOs
 
 * Change signature `Board::Tile.new(coordinates, piece)`
-* Rcov
 * Review private methods
 * Make `Common` private
 
@@ -130,7 +129,6 @@ bin/guard
 * Rename `start -> beginning` or `initial, final`, or...
 * Chainable `move.call`
 * Engage [here](https://codereview.stackexchange.com/questions/116994/object-oriented-chess-game-in-ruby)
-* Rename project in github
 
 ## Closing
 

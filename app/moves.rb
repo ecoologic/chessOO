@@ -8,7 +8,6 @@ module Moves
     end
 
     def diagonal?
-      # TODO: diagonal inverse
       (delta.x.abs == delta.y.abs) && move.free_corridor?
     end
 

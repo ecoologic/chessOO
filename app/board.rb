@@ -7,7 +7,7 @@ class Board
     ro, kn, bi = Pieces::Rook, Pieces::Knight, Pieces::Bishop
     qu, ki = Pieces::Queen, Pieces::King
 
-    [ #              A   B   C   D   E   F   G   H  - Black
+    [ #            .A  .B  .C  .D  .E  .F  .G  .H - Black
       new_row([ro, kn, bi, qu, ki, bi, kn, ro], y: 7), # 8
       new_row([pa, pa, pa, pa, pa, pa, pa, pa], y: 6), # 7
       new_row([__, __, __, __, __, __, __, __], y: 5), # 6
@@ -16,7 +16,7 @@ class Board
       new_row([__, __, __, __, __, __, __, __], y: 2), # 3
       new_row([pa, pa, pa, pa, pa, pa, pa, pa], y: 1), # 2
       new_row([ro, kn, bi, qu, ki, bi, kn, ro], y: 0)  # 1
-    ].reverse #      A   B   C   D   E   F   G   H  - White
+    ].reverse #    .A  .B  .C  .D  .E  .F  .G  .H - White
   end
 
   def self.new_row(row, y:)
