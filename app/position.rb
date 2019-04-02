@@ -9,13 +9,13 @@ class Position
     end
 
     def position
-      Position.from_coordinates([delta_x, delta_y])
+      Position.from_coordinates([x, y])
     end
 
     def all_between
       positions =
-        if delta_x.zero? || delta_y.zero?
-          all_along_axes
+        if x.zero? || y.zero?
+          all_along_axis
         else # TODO: ensure 45 degree
           all_along_diagonal
         end
@@ -23,25 +23,38 @@ class Position
       reject_first_and_last(positions) # Exclude start and destination
     end
 
+    def one_step?
+      [0, x.abs, y.abs, 1].minmax == [0, 1]
+    end
+
+    def diagonal?
+      x.abs == y.abs
+    end
+
+    def one_axis?
+      x.zero? || y.zero?
+    end
+
+    def x
+      position_b.x - position_a.x
+    end
+
+    def y
+      position_b.y - position_a.y
+    end
+
     private
 
     attr_reader :position_a, :position_b
 
-    def delta_x
-      position_b.x - position_a.x
-    end
-
-    def delta_y
-      position_b.y - position_a.y
-    end
-
+    # TODO: other diagonal: all_along_diagonal(y_range.zip(negative_x_range))
     def all_along_diagonal
       x_range.zip(y_range).map do |x, y|
         Position.from_coordinates([x, y])
       end
     end
 
-    def all_along_axes
+    def all_along_axis
       if position_a.letter == position_b.letter
         y_range.map do |path_y|
           Position.from_coordinates([position_a.x, path_y])
@@ -86,7 +99,7 @@ class Position
   end
 
   def ==(other_position)
-    to_s == other_position.to_s
+    coordinates == other_position.coordinates
   end
 
   # 'B3' => [1, 2]

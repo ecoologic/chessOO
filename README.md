@@ -6,8 +6,10 @@ Currently is doing all the basic moves, but no fancy ones like casteling.
 
 I don't plan on finishing it, I'm just interested in some of the challenges
 related to modelling the rules of the game.
-While this is a pretty unlikely domain to model at work,
-it's a good expression of my current (2019) modelling skills using
+This is a pretty unlikely domain to model at work,
+and I would never refactor code to this point unless there's a proven business reason.
+
+Yet, it's a good expression of my current (2019) modelling skills using
 Object Oriented languages.
 
 There is no frontend, the specs are the only consumers, and it's been developed TDD.
@@ -106,6 +108,18 @@ bin/guard
 * Don't create new tiles, define position values and use `board.tile_at`
 * Print the board with `puts board` (and other objects)
 * `binding.pry` is available
+
+### Code walkthrough
+
+1. Start in [`game_spec`](spec/game_spec.rb:69)
+    > kills the king with the bishop
+2. [`game`](app/game.rb) checks the game is not over
+3. Uses the [`hand`](app/hand.rb) to make the move
+4. The [`move`](app/move.rb) links the board to the pieces on the board
+5. [`Board`](app/board.rb) is self-explanatory
+6. In [`moves`](app/moves.rb) is where the logic for the pieces is
+7. [`Position`](app/position.rb) has the math to navigate the board
+
 
 ### Chess TODOs
 

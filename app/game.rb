@@ -9,7 +9,7 @@ class Game
 
   # Game.new.move('E2', 'E3') # Moves the white pawn
   def move(start_position_value, destination_position_value)
-    return unless on? # TODO: here?
+    return unless on?
 
     hand = Hand.new(Move.new(board,
                              start_position_value,

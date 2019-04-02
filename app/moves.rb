@@ -2,20 +2,6 @@
 # Moves->Tile:
 # Moves->Position:
 module Moves
-  module Common
-    def one_step?
-      [0, delta.x.abs, delta.y.abs, 1].minmax == [0, 1]
-    end
-
-    def diagonal?
-      (delta.x.abs == delta.y.abs) && move.free_corridor?
-    end
-
-    def along_axes?
-      (delta.x.zero? || delta.y.zero?) && move.free_corridor?
-    end
-  end
-
   class Abstract
     def initialize(move)
       @move = move
@@ -42,10 +28,6 @@ module Moves
     def valid_attack?
       valid_move?
     end
-
-    def delta
-      move.delta_position
-    end
   end
 
   class Null
@@ -58,21 +40,19 @@ module Moves
     private
 
     def valid_move?
-      delta.x.zero? && delta.y.abs == 1
+      move.delta.x.zero? && move.delta.y.abs == 1
     end
 
     def valid_attack?
-      delta.x.abs == 1 && delta.y.abs == 1
+      move.delta.x.abs == 1 && move.delta.y.abs == 1
     end
   end
 
   class Moves::Rook < Moves::Abstract
-    include Common
-
     private
 
     def valid_move?
-      along_axes?
+      move.delta.one_axis? && move.free_corridor?
     end
   end
 
@@ -80,37 +60,31 @@ module Moves
     private
 
     def valid_move?
-      [delta.x.abs, delta.y.abs].sort == [1, 2]
+      [move.delta.x.abs, move.delta.y.abs].sort == [1, 2]
     end
   end
 
   class Bishop < Moves::Abstract
-    include Common
-
     private
 
     def valid_move?
-      diagonal?
+      move.delta.diagonal? && move.free_corridor?
     end
   end
 
   class Moves::Queen < Moves::Abstract
-    include Common
-
     private
 
     def valid_move?
-      along_axes? || diagonal?
+      (move.delta.one_axis? || move.delta.diagonal?) && move.free_corridor?
     end
   end
 
   class Moves::King < Moves::Abstract
-    include Common
-
     private
 
     def valid_move?
-      one_step?
+      move.delta.one_step?
     end
   end
 end

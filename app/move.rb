@@ -19,8 +19,8 @@ class Move
     board.tile_at(destination_position.to_s)
   end
 
-  def delta_position
-    Position::Delta.new(start_position, destination_position).position
+  def delta
+    Position::Delta.new(start_position, destination_position)
   end
 
   def standing?
@@ -28,8 +28,7 @@ class Move
   end
 
   def free_corridor?
-    positions = Position::Delta.new(start_position, destination_position).all_between
-    positions.select { |p| board.tile_at(p.to_s).occupied? }.empty?
+    delta.all_between.select { |p| board.tile_at(p.to_s).occupied? }.empty?
   end
 
   def in_board?

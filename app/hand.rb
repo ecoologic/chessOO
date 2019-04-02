@@ -11,8 +11,7 @@ class Hand
 
   # NOTE: Mutates the states of tiles at runtime, not idempotent method
   def call
-    return unless move.in_board? # TODO? in Hand
-
+    return unless move.in_board?
     return unless valid?
 
     move.start_tile.piece = Pieces::Null.new
