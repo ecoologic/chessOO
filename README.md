@@ -1,15 +1,14 @@
 # ChessOO - An Object-Oriented model of the Chess rules in Ruby
 
-Written for readability.
+Written for readability, hopefully.
 
 Currently is doing all the basic moves, but no fancy ones like casteling.
 
 I don't plan on finishing it, I'm just interested in some of the challenges
-related to modelling the rules of the game.
-This is a pretty unlikely domain to model at work,
-and I would never refactor code to this point unless there's a proven business reason.
+related to modelling the rules of the game.  I have "played refactoring"
+after [adding the queen](524d7b3), when I switched focus away from features.
 
-Yet, it's a good expression of my current (2019) modelling skills using
+It's a good expression of my current (2019) modelling skills using
 Object Oriented languages.
 
 There is no frontend, the specs are the only consumers, and it's been developed TDD.
@@ -111,12 +110,14 @@ bin/guard
 
 ### Code walkthrough
 
+Most of the calculations can be found in `Move, Moves, Position`, here's a breakdown:
+
 1. Start in [`game_spec`](spec/game_spec.rb:69)
     > kills the king with the bishop
 2. [`game`](app/game.rb) checks the game is not over
 3. Uses the [`hand`](app/hand.rb) to make the move
 4. The [`move`](app/move.rb) links the board to the pieces on the board
-5. [`Board`](app/board.rb) is self-explanatory
+5. [`Board`](app/board.rb) tracks where the pieces are
 6. In [`moves`](app/moves.rb) is where the logic for the pieces is
 7. [`Position`](app/position.rb) has the math to navigate the board
 
@@ -134,19 +135,21 @@ bin/guard
 
 ### Tech TODOs
 
-* Change signature `Board::Tile.new(coordinates, piece)`
+* Can you write it without: `Hand Tile Moves`?
+* Test Rook two axes
+* Bishop other diagonal
 * Review private methods
-* Make `Common` private
 
 #### Maybes
 
-* Rename `start -> beginning` or `initial, final`, or...
+* Rename `start -> beginning` or `initial, final`, `a, b` or...
 * Chainable `move.call`
+* Immutable
 * Engage [here](https://codereview.stackexchange.com/questions/116994/object-oriented-chess-game-in-ruby)
 
 ## Closing
 
-Licence: See MIT-LICENCE file, no surprises there.
+Licence: See the MIT-LICENCE file, no surprises there.
 
 Contributions: Sure, why not, follow _any_ template.
 

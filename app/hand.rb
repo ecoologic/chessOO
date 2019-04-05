@@ -1,8 +1,9 @@
-# The hand moves the piece on another tile if it's valid
 # Hand->Moves:
 # Hand->Move:
 # Hand->Tile:
 # Hand->Pieces:
+#
+# Executes a Move if it is valid
 class Hand
   def initialize(move)
     @move = move

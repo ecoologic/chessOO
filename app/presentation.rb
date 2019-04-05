@@ -1,3 +1,5 @@
+# A collection of presentational methods like inspect, to_s, to_sym
+
 class Game
   def to_s; inspect; end
 
@@ -79,11 +81,13 @@ class Pieces::Abstract
   end
 end
 
-class Tile
-  def to_s; inspect; end
+class Board
+  class Tile
+    def to_s; inspect; end
 
-  def inspect
-    "#<Tile:#{position.to_s}:#{piece.to_sym}>"
+    def inspect
+      "#<Tile:#{position.to_s}:#{piece.to_sym}>"
+    end
   end
 end
 

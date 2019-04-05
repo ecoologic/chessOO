@@ -13,9 +13,9 @@ RSpec.describe "Presentation" do
     end
   end
 
-  describe Tile do
+  describe Board::Tile do
     describe '#inspect' do
-      it { expect(described_class.new('A1').to_s).to eq('#<Tile:A1:__>') }
+      it { expect(described_class.new([1, 2]).to_s).to eq('#<Tile:B3:__>') }
     end
   end
 

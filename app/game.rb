@@ -2,6 +2,8 @@
 # Game->Move:
 # Game->Board:
 # Game->Pieces:
+#
+# Sets up the board and executes moves on it
 class Game
   def initialize(board = Board.new)
     @board = board

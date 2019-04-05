@@ -1,4 +1,6 @@
 # No dependencies
+#
+# The pieces that sit in the Tile of the Boad waiting to be in a Move
 module Pieces
   class Abstract
     def initialize(description = object_id)

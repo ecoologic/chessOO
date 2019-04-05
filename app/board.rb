@@ -1,7 +1,30 @@
-# Board->Tile:
 # Board->Pieces:
 # Board->Position:
+#
+# Stores where every piece is
 class Board
+  # Each cell of the board, binds the piece to its position
+  # NOTE: mutable object
+  class Tile
+    def initialize(coordinates, piece_class = Pieces::Null)
+      @position = Position.from_coordinates(coordinates)
+      @piece = piece_class.new(position)
+    end
+
+    attr_reader :position
+    attr_accessor :piece
+
+    def ==(other_tile)
+      position == other_tile.position
+    end
+
+    def occupied?
+      piece.present?
+    end
+  end
+
+  ############################################################################
+
   def self.initial_disposition
     __, pa = Pieces::Null, Pieces::Pawn
     ro, kn, bi = Pieces::Rook, Pieces::Knight, Pieces::Bishop
@@ -21,10 +44,7 @@ class Board
 
   def self.new_row(row, y:)
     row.each_with_index.map do |piece_class, x|
-      position_value = Position.from_coordinates([x, y]).to_s
-      piece = piece_class.new(position_value)
-
-      Tile.new(position_value, piece)
+      Tile.new([x, y], piece_class)
     end
   end
 
@@ -33,10 +53,7 @@ class Board
   end
 
   def include?(position_value)
-    position = Position.new(position_value)
-
-    position.x <= last_position.x &&
-      position.y <= last_position.y
+    Position.new(position_value) <= last_position
   end
 
   def tile_at(position_value)

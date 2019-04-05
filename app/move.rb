@@ -1,8 +1,10 @@
-# Executes one valid move or attack within the rules of the game
 # Move->Board:
 # Move->Tile:
 # Move->Pieces:
 # Move->Position:
+#
+# Composes the board, the moving piece and its destination
+# to provide the properties a move
 class Move
   def initialize(board, start_position_value, destination_position_value)
     @board = board
@@ -12,11 +14,11 @@ class Move
   end
 
   def start_tile
-    board.tile_at(start_position.to_s)
+    board.tile_at(start_position)
   end
 
   def destination_tile
-    board.tile_at(destination_position.to_s)
+    board.tile_at(destination_position)
   end
 
   def delta
@@ -28,11 +30,11 @@ class Move
   end
 
   def free_corridor?
-    delta.all_between.select { |p| board.tile_at(p.to_s).occupied? }.empty?
+    delta.all_between.select { |p| board.tile_at(p).occupied? }.empty?
   end
 
   def in_board?
-    board.include?(destination_position.to_s)
+    board.include?(destination_position)
   end
 
   private

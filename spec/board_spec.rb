@@ -51,10 +51,10 @@ RSpec.describe Board do
   describe '#include?' do
     example_group :lets
 
-    let(:a1) { Tile.new('A1') }
-    let(:a2) { Tile.new('A2') }
-    let(:b1) { Tile.new('B1') }
-    let(:b2) { Tile.new('B2') }
+    let(:a1) { board.tile_at('A1') }
+    let(:a2) { board.tile_at('A2') }
+    let(:b1) { board.tile_at('B1') }
+    let(:b2) { board.tile_at('B2') }
 
     it "is true only for the position values of the row (x, letters)" do
       expect(row_board.include?('A1')).to be true
@@ -72,30 +72,30 @@ RSpec.describe Board do
   end
 
   describe '#tile_at' do
-    subject :board do
-      described_class.new [
-                            [Tile.new('A1', piece), 'A2'],
-                            %w[B1 B2]
-                          ]
-    end
-
-    let(:piece) { :x }
-
-    it "finds the piece" do
-      expect(board.tile_at('A1').piece).to eq piece
+    it "finds the pieces" do
+      expect(board.tile_at('E1').piece.class).to eq Pieces::King
     end
   end
 
   describe '#pieces_by_class' do
     subject :board do
       described_class.new [
-                            [Tile.new('A1', Pieces::King.new),
-                             Tile.new('A2')]
+                            [Board::Tile.new([0, 0], Pieces::King),
+                             Board::Tile.new([1, 0])]
                           ]
     end
 
     it "is one where there is only one king" do
       expect(board.pieces_by_class(Pieces::King).count).to be 1
+    end
+  end
+end
+
+RSpec.describe Board::Tile do
+  describe '==' do
+    it "returns true when two tiles have the same position" do
+      expect(described_class.new([2, 3])).to eq(described_class.new([2, 3]))
+      expect(described_class.new([2, 3])).not_to eq(described_class.new([3, 2]))
     end
   end
 end

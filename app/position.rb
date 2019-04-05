@@ -1,30 +1,41 @@
-# Wraps the info 'A1' to provides helper methods
-# like coordinates [x, y], distances etc
 # No dependencies
+#
+# Wraps the value 'A1' to provide helper methods
+# like coordinates [x, y], comparisons etc
 class Position
-  # Math between two positions
+  # Properties between two positions
   class Delta
     def initialize(position_a, position_b)
       @position_a, @position_b = position_a, position_b
     end
 
-    def position
-      Position.from_coordinates([x, y])
-    end
-
     def all_between
       positions =
         if x.zero? || y.zero?
-          all_along_axis
+          all_along_axis # all_along_letter/number
         else # TODO: ensure 45 degree
+          # TODO: all_along_diagonal(y_range.zip(x_range.reverse)) x2
           all_along_diagonal
         end
 
-      reject_first_and_last(positions) # Exclude start and destination
+      reject_first_and_last(positions) # Start and destination
+    end
+
+    def l_shape?
+      [x.abs, y.abs].sort == [1, 2]
+    end
+
+    # TODO: one_forward?(color) # forward_y_by_color = { white: 1, black: -1 }
+    def one_forward?
+      [x, y.abs] == [0, 1]
+    end
+
+    def one_up_diagonal?
+      [x.abs, y.abs] == [1, 1]
     end
 
     def one_step?
-      [0, x.abs, y.abs, 1].minmax == [0, 1]
+      [0, x.abs, y.abs].minmax == [0, 1]
     end
 
     def diagonal?
@@ -47,7 +58,6 @@ class Position
 
     attr_reader :position_a, :position_b
 
-    # TODO: other diagonal: all_along_diagonal(y_range.zip(negative_x_range))
     def all_along_diagonal
       x_range.zip(y_range).map do |x, y|
         Position.from_coordinates([x, y])
@@ -55,7 +65,7 @@ class Position
     end
 
     def all_along_axis
-      if position_a.letter == position_b.letter
+      if position_a.letter == position_b.letter # TODO: use diagonal => :x, :y, nil
         y_range.map do |path_y|
           Position.from_coordinates([position_a.x, path_y])
         end
@@ -79,8 +89,8 @@ class Position
 
   ############################################################################
 
-  def self.from_coordinates(coordinate_couple)
-    x, y = coordinate_couple
+  def self.from_coordinates(coordinates)
+    x, y = coordinates
     letter_x = ('A'.bytes.first + x).chr
     number_y = y + 1
 
@@ -88,14 +98,19 @@ class Position
   end
 
   def initialize(value)
-    @x = value.chars.first.upcase.bytes.first - 'A'.bytes.first
-    @y = value.chars.last.to_i - 1 # Classic -1: index starting at 0
+    position_value = value.to_s
+    @x = position_value.chars.first.upcase.bytes.first - 'A'.bytes.first
+    @y = position_value.chars.last.to_i - 1 # Classic -1: index starting at 0
   end
 
   attr_reader :x, :y
 
   def to_s
     "#{letter}#{number}"
+  end
+
+  def <=(other_position)
+    x <= other_position.x && y <= other_position.y
   end
 
   def ==(other_position)

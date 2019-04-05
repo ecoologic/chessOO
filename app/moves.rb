@@ -1,6 +1,8 @@
 # Moves->Move:
 # Moves->Tile:
 # Moves->Position:
+#
+# Describes HOW every piece move
 module Moves
   class Abstract
     def initialize(move)
@@ -35,16 +37,15 @@ module Moves
     def call; false; end
   end
 
-  # NOTE: position.abs -> workaround while we don't have black/white player
   class Pawn < Moves::Abstract
     private
 
     def valid_move?
-      move.delta.x.zero? && move.delta.y.abs == 1
+      move.delta.one_forward?
     end
 
     def valid_attack?
-      move.delta.x.abs == 1 && move.delta.y.abs == 1
+      move.delta.one_up_diagonal? # TODO: one_forward_diagonal?
     end
   end
 
@@ -60,7 +61,7 @@ module Moves
     private
 
     def valid_move?
-      [move.delta.x.abs, move.delta.y.abs].sort == [1, 2]
+      move.delta.l_shape?
     end
   end
 
